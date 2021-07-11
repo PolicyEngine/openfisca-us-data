@@ -4,6 +4,7 @@ import pandas as pd
 from openfisca_uk_data import DATA_DIR
 from openfisca_uk_data.utils import data_folder
 
+
 class Dataset:
     source: str = None
     years: List[int] = []
@@ -14,6 +15,6 @@ class Dataset:
 
     def save(zipfile_path: str, year: int = None) -> None:
         raise NotImplementedError()
-    
+
     def load(table: str = None, year: int = None) -> pd.DataFrame:
         raise NotImplementedError()
