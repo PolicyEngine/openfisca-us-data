@@ -76,7 +76,7 @@ class FRS:
         person_vars, benunit_vars, household_vars = [
             [
                 var.__name__
-                for var in input_variables
+                for var in get_input_variables()
                 if var.entity.key == entity
             ]
             for entity in ("person", "benunit", "household")
