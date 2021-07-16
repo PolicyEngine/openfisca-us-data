@@ -1,2 +1,4 @@
 **/__pycache__
 **/*.h5
+openfisca_uk_data.egg-info/
+.vscode/
