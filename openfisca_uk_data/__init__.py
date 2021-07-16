@@ -1,4 +1,2 @@
 from pathlib import Path
-
-PACKAGE_DIR = Path(__file__).parent
-DATA_DIR = PACKAGE_DIR / "microdata"
+from openfisca_uk_data.datasets import RawFRS, BaseFRS, FRS

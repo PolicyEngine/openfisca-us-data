@@ -1,0 +1,13 @@
+README.md
+pyproject.toml
+setup.py
+openfisca_uk_data/__init__.py
+openfisca_uk_data/cli.py
+openfisca_uk_data/dataset.py
+openfisca_uk_data/utils.py
+openfisca_uk_data.egg-info/PKG-INFO
+openfisca_uk_data.egg-info/SOURCES.txt
+openfisca_uk_data.egg-info/dependency_links.txt
+openfisca_uk_data.egg-info/entry_points.txt
+openfisca_uk_data.egg-info/requires.txt
+openfisca_uk_data.egg-info/top_level.txt
