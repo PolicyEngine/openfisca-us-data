@@ -1,3 +1,0 @@
-[console_scripts]
-openfisca-uk-data = openfisca_uk_data.cli:main
-
