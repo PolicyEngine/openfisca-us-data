@@ -10,6 +10,17 @@ This package is designed to be simple to add new OpenFisca-UK-compatible dataset
 3. Define a `generate(year)` method
 4. Ensure the class is imported in `openfisca_uk/__init__.py` and `openfisca_uk/cli.py`
 
+## Usage
+
+All dataset classes can be imported from the package, and there is also a command line interface:
+```console
+openfisca-uk-data [dataset_name] [method] [arg1] [arg2]
+```
+For example:
+```console
+openfisca-uk-data raw_frs generate 2018 data.zip
+```
+
 ## The `dataset` class decorator
 
 This package uses a class decorator to ensure all datasets have the same loading/saving/querying interface. To use it, use the `@` symbol:

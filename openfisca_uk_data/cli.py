@@ -1,9 +1,11 @@
 from argparse import ArgumentParser
-from openfisca_uk_data.datasets import RawFRS, BaseFRS, FRS
+from openfisca_uk_data import RawFRS, BaseFRS, FRS, RawSPI, BaseSPI, SPI
 
 
 def main():
-    datasets = {ds.name: ds for ds in (RawFRS, BaseFRS, FRS)}
+    datasets = {
+        ds.name: ds for ds in (RawFRS, BaseFRS, FRS, RawSPI, BaseSPI, SPI)
+    }
     parser = ArgumentParser(
         description="A utility for storing OpenFisca-UK-compatible microdata."
     )
