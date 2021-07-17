@@ -21,3 +21,15 @@ class CustomDataset:
         ...
     ...
 ```
+
+## Current datasets
+
+### RawFRS
+- Not OpenFisca-UK-compatible
+- Contains the tables from the raw microdata
+### BaseFRS
+- OpenFisca-UK-compatible
+- Loads the named survey variables, and specifies how these should be transformed into the model's input variables using OpenFisca formulas
+### FRS
+- OpenFisca-UK-compatible
+- Skips loading the named survey variables like BaseFRS, instead loading the calculated input variables from using BaseFRS
