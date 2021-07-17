@@ -47,6 +47,7 @@ class FRS_SPI_Adjusted:
             y_train=spi_dividend_income,
             x_new=frs_earnings_and_interest,
             sample_weight_train=spi_weight,
+            mean_quantile=0.18,
         )
         print(" completed.")
         imputed_dividend_income *= (
