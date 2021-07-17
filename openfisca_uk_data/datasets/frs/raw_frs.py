@@ -1,6 +1,6 @@
 from pathlib import Path
 from typing import List
-from openfisca_uk_data.datasets.datasets import dataset
+from openfisca_uk_data.utils import dataset
 import pandas as pd
 import shutil
 from openfisca_uk_data.utils import DATA_DIR, safe_rmdir, data_folder

@@ -2,7 +2,7 @@ from openfisca_uk_data.datasets.frs.raw_frs import RawFRS
 from pathlib import Path
 from typing import List
 from openfisca_core.model_api import *
-from openfisca_uk_data.datasets.datasets import dataset
+from openfisca_uk_data.utils import dataset
 import pandas as pd
 import shutil
 from openfisca_uk_data.utils import (

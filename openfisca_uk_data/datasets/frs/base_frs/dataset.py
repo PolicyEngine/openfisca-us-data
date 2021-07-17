@@ -1,7 +1,7 @@
 from openfisca_uk_data.datasets.frs.base_frs.model_input_variables import (
     from_BaseFRS,
 )
-from openfisca_uk_data.datasets.datasets import dataset
+from openfisca_uk_data.utils import dataset
 import pandas as pd
 import numpy as np
 import warnings
