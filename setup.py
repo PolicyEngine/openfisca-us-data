@@ -10,7 +10,7 @@ setup(
     author="Nikhil Woodruff",
     author_email="nikhil.woodruff@outlook.com",
     packages=find_packages(),
-    install_requires=["pandas", "pathlib", "tqdm", "tables", "h5py"],
+    install_requires=["pandas", "pathlib", "tqdm", "tables", "h5py", "synthimpute @ git+https://github.com/PSLmodels/synthimpute"],
     entry_points={
         "console_scripts": ["openfisca-uk-data=openfisca_uk_data.cli:main"],
     },
