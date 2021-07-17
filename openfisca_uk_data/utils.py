@@ -144,3 +144,113 @@ def uprated(parameter: str = None, from_year: int = 2018) -> Callable:
         return variable
 
     return get_uprating_variable
+
+
+MAIN_INPUT_VARIABLES = (
+    "DLA_SC_reported",
+    "region",
+    "employment_status",
+    "is_household_head",
+    "ESA_contrib_reported",
+    "trading_income",
+    "DLA_M_reported",
+    "IIDB_reported",
+    "ESA_income_reported",
+    "property_income",
+    "household_id",
+    "deficiency_relief",
+    "tax_reported",
+    "incapacity_benefit_reported",
+    "housing_benefit_reported",
+    "in_FE",
+    "B_household_id",
+    "base_net_income",
+    "child_benefit_reported",
+    "AFCS_reported",
+    "universal_credit_reported",
+    "benunit_id",
+    "dividend_income",
+    "benunit_weight",
+    "savings_interest_income",
+    "pension_credit_reported",
+    "child_tax_credit_reported",
+    "self_employment_income",
+    "miscellaneous_income",
+    "housing_costs",
+    "hours_worked",
+    "charitable_investment_gifts",
+    "person_id",
+    "tax_free_savings_income",
+    "age",
+    "employment_expenses",
+    "married_couples_allowance",
+    "num_bedrooms",
+    "JSA_contrib_reported",
+    "tenure_type",
+    "B_benunit_id",
+    "P_person_id",
+    "capital_allowances",
+    "rent",
+    "benefits_reported",
+    "social_security_income",
+    "pension_contributions",
+    "SDA_reported",
+    "covenanted_payments",
+    "PIP_DL_reported",
+    "PIP_M_reported",
+    "JSA_income_reported",
+    "household_weight",
+    "state_pension_reported",
+    "P_benunit_id",
+    "P_household_id",
+    "blind_persons_allowance",
+    "employment_income",
+    "other_deductions",
+    "AA_reported",
+    "person_weight",
+    "pension_income",
+    "gender",
+    "P_role",
+    "sublet_income",
+    "accommodation_type",
+    "income_support_reported",
+    "council_tax",
+    "BSP_reported",
+    "carers_allowance_reported",
+    "H_household_id",
+    "pays_scottish_income_tax",
+    "gift_aid",
+    "working_tax_credit_reported",
+    "is_benunit_head",
+)
+
+
+def uprate_variables(variables: List[str]):
+    def get_uprating_reform(year: int = 2018):
+        from openfisca_uk import CountryTaxBenefitSystem
+
+        system = CountryTaxBenefitSystem()
+        vars = []
+        for variable in variables:
+            vars += [type(system.variables[variable])]
+        for i in range(len(vars)):
+            variable = vars[i]
+            if variable in LABOUR_INCOME_VARIABLES:
+                vars[i] = uprated(
+                    "uprating.labour_income", from_year=year + 1
+                )(variable)
+            elif variable in CAPITAL_INCOME_VARIABLES:
+                vars[i] = uprated(
+                    "uprating.labour_income", from_year=year + 1
+                )(variable)
+            else:
+                vars[i] = uprated(from_year=year + 1)(variable)
+
+        class reform(Reform):
+            def apply(self):
+                for var in vars:
+                    self.update_variable(var)
+
+        return reform
+
+    return get_uprating_reform
