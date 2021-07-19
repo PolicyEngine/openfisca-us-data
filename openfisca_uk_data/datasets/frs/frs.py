@@ -7,16 +7,10 @@ import pandas as pd
 import shutil
 from openfisca_uk_data.utils import (
     CAPITAL_INCOME_VARIABLES,
-    DATA_DIR,
     LABOUR_INCOME_VARIABLES,
-    safe_rmdir,
     uprated,
 )
-import re
-from tqdm import tqdm
 import h5py
-import numpy as np
-import warnings
 from openfisca_uk_data.datasets.frs.base_frs.dataset import BaseFRS
 from openfisca_uk_data.datasets.frs.base_frs.model_input_variables import (
     get_input_variables,
