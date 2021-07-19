@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import h5py
 
+
 @dataset
 class SynthFRS:
     name = "synth_frs"
@@ -47,7 +48,9 @@ class SynthFRS:
             for variable in data.keys():
                 if system.variables[variable].entity.key == entity:
                     entity_dfs[entity][variable] = data[variable][str(year)]
-        person, benunit, household = map(lambda x: anonymise(pd.DataFrame(x)), entity_dfs.values())
+        person, benunit, household = map(
+            lambda x: anonymise(pd.DataFrame(x)), entity_dfs.values()
+        )
 
         year = int(year)
 
@@ -60,7 +63,6 @@ class SynthFRS:
                 f[f"{variable}/{year}"] = benunit[variable].values
             for variable in household.columns:
                 f[f"{variable}/{year}"] = household[variable].values
-
 
     def save(data_file, year: int = 2018):
         shutil.copyfile(data_file, SynthFRS.data_dir / SynthFRS.filename(year))

@@ -3,6 +3,6 @@ from openfisca_uk_data.datasets.frs import (
     FRS,
     BaseFRS,
     FRS_SPI_Adjusted,
-    SynthFRS
+    SynthFRS,
 )
 from openfisca_uk_data.datasets.spi import RawSPI, BaseSPI, SPI
