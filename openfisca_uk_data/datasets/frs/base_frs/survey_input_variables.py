@@ -604,6 +604,11 @@ def get_FRS_variables():
         entity = Person
         definition_period = YEAR
 
+    class P_CHAMT(Variable):
+        value_type = float
+        entity = Person
+        definition_period = YEAR
+
     class H_PTENTYP2(Variable):
         value_type = float
         entity = Household
@@ -767,6 +772,7 @@ def get_FRS_variables():
         P_INDISBEN,
         P_INRPINC,
         P_SEX,
+        P_CHAMT,
     ]
 
     return FRS_variables
