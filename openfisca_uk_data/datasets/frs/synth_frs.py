@@ -4,6 +4,7 @@ import shutil
 import pandas as pd
 import numpy as np
 import h5py
+import requests
 
 
 @dataset
@@ -64,5 +65,13 @@ class SynthFRS:
             for variable in household.columns:
                 f[f"{variable}/{year}"] = household[variable].values
 
-    def save(data_file, year: int = 2018):
-        shutil.copyfile(data_file, SynthFRS.data_dir / SynthFRS.filename(year))
+    def save(data_file=None, year: int = 2018):
+        if data_file is None:
+            URL = "https://github.com/nikhilwoodruff/openfisca-uk-data/releases/download/synth-frs/synth_frs_2018.h5"
+            data = requests.get(URL).content
+            with open(SynthFRS.data_dir / SynthFRS.filename(year), "wb") as f:
+                f.write(data)
+        else:
+            shutil.copyfile(
+                data_file, SynthFRS.data_dir / SynthFRS.filename(year)
+            )

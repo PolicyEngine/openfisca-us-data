@@ -91,6 +91,8 @@ def dataset(cls):
     if not hasattr(cls, "input_reform_from_year"):
         cls.input_reform_from_year = lambda year: ()
 
+    cls.file = staticmethod(lambda year: cls.data_dir / cls.filename(year))
+
     return cls
 
 
