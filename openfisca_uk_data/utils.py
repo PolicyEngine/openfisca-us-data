@@ -27,7 +27,8 @@ def dataset(cls):
             map(
                 int,
                 pattern.findall(
-                    "\n" + "\n".join(
+                    "\n"
+                    + "\n".join(
                         map(lambda path: path.name, cls.data_dir.iterdir())
                     )
                 ),
