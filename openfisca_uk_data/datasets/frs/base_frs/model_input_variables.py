@@ -284,6 +284,15 @@ def get_input_variables():
         def formula(person, period, parameters):
             return person.household("H_GROSS4", period)
 
+    class childcare_cost(Variable):
+        value_type = float
+        entity = Person
+        label = "Cost of childcare"
+        definition_period = YEAR
+
+        def formula(person, period, parameters):
+            return person("P_CHAMT", period) * WEEKS_IN_YEAR
+
     class benunit_weight(Variable):
         value_type = float
         entity = BenUnit
@@ -813,6 +822,7 @@ def get_input_variables():
         B_household_id,
         H_household_id,
         P_role,
+        childcare_cost,
     ]
     return input_variables
 
