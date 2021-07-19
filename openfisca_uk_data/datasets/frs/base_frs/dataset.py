@@ -16,6 +16,7 @@ class BaseFRS:
     input_reform_from_year = from_BaseFRS
 
     def generate(year):
+        raw_frs_files = RawFRS.load(year)
         tables = (
             "adult",
             "child",
@@ -24,6 +25,7 @@ class BaseFRS:
             "job",
             "benunit",
             "househol",
+            "chldcare",
         )
         (
             frs_adult,
@@ -33,9 +35,11 @@ class BaseFRS:
             frs_job,
             frs_benunit,
             frs_household,
-        ) = [RawFRS.load(year)[table] for table in tables]
+            frs_childcare,
+        ) = [raw_frs_files[table] for table in tables]
 
         person = frs_adult.drop(["AGE"], axis=1)
+        person["role"] = "adult"
 
         get_new_columns = lambda df: list(
             df.columns.difference(person.columns)
@@ -45,7 +49,9 @@ class BaseFRS:
             frs_child[get_new_columns(frs_child)],
             how="outer",
             on="person_id",
-        )
+        ).sort_values("person_id")
+
+        person["role"].fillna("child", inplace=True)
 
         # link capital income sources (amounts summed by account type)
 
@@ -104,9 +110,18 @@ class BaseFRS:
         )
         person = pd.merge(person, job, how="outer", on="person_id").fillna(0)
 
-        person["role"] = np.where(person.AGE80 >= 18, "adult", "child")
         person["benunit_id"] = person["person_id"] // 1e1
         person["household_id"] = person["person_id"] // 1e2
+
+        childcare = (
+            frs_childcare[get_new_columns(frs_childcare)]
+            .groupby("person_id")
+            .sum()
+            .reset_index()
+        )
+        person = pd.merge(
+            person, childcare, how="outer", on="person_id"
+        ).fillna(0)
         person = person.add_prefix("P_")
 
         # generate benefit unit and household datasets
@@ -133,6 +148,8 @@ class BaseFRS:
         )
         average_CT = household.H_CTANNUAL.dropna().mean()
         household.fillna(average_CT, inplace=True)
+
+        raw_frs_files.close()
 
         # store dataset for future use
         year = int(year)
