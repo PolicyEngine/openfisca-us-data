@@ -37,7 +37,7 @@ class RawFRS:
                 if criterion.match(path.name)
             ]
             task = tqdm(data_files, desc="Saving raw data tables")
-            with pd.HDFStore(RawFRS.data_dir / RawFRS.filename(year)) as file:
+            with pd.HDFStore(RawFRS.file(year)) as file:
                 for filepath in task:
                     task.set_description(
                         f"Saving raw data tables ({filepath.name})"

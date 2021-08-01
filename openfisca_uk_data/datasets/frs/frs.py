@@ -75,7 +75,7 @@ class FRS:
             ]
             for entity in ("person", "benunit", "household")
         ]
-        with h5py.File(FRS.data_dir / FRS.filename(year), mode="w") as f:
+        with h5py.File(FRS.file(year), mode="w") as f:
             for variable in person_vars + benunit_vars + household_vars:
                 f[f"{variable}/{year}"] = base_frs_sim.calc(
                     variable, year

@@ -19,7 +19,7 @@ class RawSPI:
         shutil.unpack_archive(folder, new_folder)
         folder = new_folder
         main_folder = next(folder.iterdir())
-        with pd.HDFStore(RawSPI.data_dir / RawSPI.filename(year)) as file:
+        with pd.HDFStore(RawSPI.file(year)) as file:
             if (main_folder / "tab").exists():
                 data_folder = main_folder / "tab"
                 data_files = list(data_folder.glob("*.tab"))

@@ -5,6 +5,9 @@ import pandas as pd
 import numpy as np
 import h5py
 import requests
+from tqdm import tqdm
+
+DEFAULT_SYNTH_URL = "https://github.com/nikhilwoodruff/openfisca-uk-data/releases/download/synth-frs/synth_frs_2018.h5"
 
 
 @dataset
@@ -55,9 +58,7 @@ class SynthFRS:
 
         year = int(year)
 
-        with h5py.File(
-            SynthFRS.data_dir / SynthFRS.filename(year), mode="w"
-        ) as f:
+        with h5py.File(SynthFRS.file(year), mode="w") as f:
             for variable in person.columns:
                 f[f"{variable}/{year}"] = person[variable].values
             for variable in benunit.columns:
@@ -65,13 +66,20 @@ class SynthFRS:
             for variable in household.columns:
                 f[f"{variable}/{year}"] = household[variable].values
 
-    def save(data_file=None, year: int = 2018):
-        if data_file is None:
-            URL = "https://github.com/nikhilwoodruff/openfisca-uk-data/releases/download/synth-frs/synth_frs_2018.h5"
-            data = requests.get(URL).content
-            with open(SynthFRS.data_dir / SynthFRS.filename(year), "wb") as f:
-                f.write(data)
-        else:
-            shutil.copyfile(
-                data_file, SynthFRS.data_dir / SynthFRS.filename(year)
+    def save(data_file: str = DEFAULT_SYNTH_URL, year: int = 2018):
+        if "https://" in data_file:
+            response = requests.get(data_file, stream=True)
+            total_size_in_bytes = int(
+                response.headers.get("content-length", 0)
             )
+            block_size = 1024  # 1 Kibibyte
+            progress_bar = tqdm(
+                total=total_size_in_bytes, unit="iB", unit_scale=True
+            )
+            with open(SynthFRS.file(year), "wb") as file:
+                for data in response.iter_content(block_size):
+                    progress_bar.update(len(data))
+                    file.write(data)
+            progress_bar.close()
+        else:
+            shutil.copyfile(data_file, SynthFRS.file(year))

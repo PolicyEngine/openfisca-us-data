@@ -56,8 +56,6 @@ class FRS_SPI_Adjusted:
         frs_sim.simulation.set_input(
             "dividend_income", year, imputed_dividend_income
         )
-        with h5py.File(
-            FRS_SPI_Adjusted.data_dir / FRS_SPI_Adjusted.filename(year), "w"
-        ) as f:
+        with h5py.File(FRS_SPI_Adjusted.file(year), "w") as f:
             for variable in MAIN_INPUT_VARIABLES:
                 f[f"{variable}/{year}"] = frs_sim.calc(variable, year).values

@@ -79,7 +79,7 @@ class SPI:
         ]
         benunit_vars += ["B_benunit_id"]
         household_vars += ["H_household_id"]
-        with h5py.File(SPI.data_dir / SPI.filename(year), mode="w") as f:
+        with h5py.File(SPI.file(year), mode="w") as f:
             for year in range(int(year), int(year) + 10):
                 for variable in person_vars + benunit_vars + household_vars:
                     f[f"{variable}/{year}"] = base_frs_sim.calc(

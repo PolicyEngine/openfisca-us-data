@@ -38,9 +38,7 @@ class BaseSPI:
         benunit["B_FACT"] = weight
         household["H_FACT"] = weight
 
-        with h5py.File(
-            BaseSPI.data_dir / BaseSPI.filename(year), mode="w"
-        ) as f:
+        with h5py.File(BaseSPI.file(year), mode="w") as f:
             for variable in person.columns:
                 f[f"{variable}/{year}"] = person[variable].values
             for variable in benunit.columns:

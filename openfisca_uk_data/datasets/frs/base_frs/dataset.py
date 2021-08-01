@@ -154,9 +154,7 @@ class BaseFRS:
         # store dataset for future use
         year = int(year)
 
-        with h5py.File(
-            BaseFRS.data_dir / BaseFRS.filename(year), mode="w"
-        ) as f:
+        with h5py.File(BaseFRS.file(year), mode="w") as f:
             for variable in person.columns:
                 f[f"{variable}/{year}"] = person[variable].values
             for variable in benunit.columns:
