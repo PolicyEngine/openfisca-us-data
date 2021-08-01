@@ -19,40 +19,39 @@ class FRS_SPI_Adjusted:
         from openfisca_uk_data.datasets.frs.frs import FRS
         from openfisca_uk_data.datasets.spi import SPI
 
-        frs_sim = Microsimulation(dataset=FRS)
-        spi_sim = Microsimulation(dataset=SPI)
+        frs_sim = Microsimulation(dataset=FRS, year=year)
+        spi_sim = Microsimulation(dataset=SPI, year=year)
 
-        spi_earnings_and_interest = np.array(
+        X_spi = np.array(
             [
                 spi_sim.calc("employment_income", year).values,
-                spi_sim.calc("savings_interest_income", year).values,
+                spi_sim.calc("pension_income", year).values,
                 spi_sim.calc("age", year).values,
             ]
         ).T
-        frs_earnings_and_interest = np.array(
+        X_frs = np.array(
             [
                 frs_sim.calc("employment_income", year).values,
-                frs_sim.calc("savings_interest_income", year).values,
+                frs_sim.calc("pension_income", year).values,
                 frs_sim.calc("age", year).values,
             ]
         ).T
-        spi_dividend_income = spi_sim.calc("dividend_income", year).values
+        Y_spi = spi_sim.calc("dividend_income", year).values
         spi_weight = spi_sim.calc("person_weight", year).values
+        frs_weight = frs_sim.calc("person_weight", year).values
         print(
             "Imputing dividend income for FRS respondents from SPI values...",
             end="",
         )
         imputed_dividend_income = si.rf_impute(
-            x_train=spi_earnings_and_interest,
-            y_train=spi_dividend_income,
-            x_new=frs_earnings_and_interest,
+            x_train=X_spi,
+            y_train=Y_spi,
+            x_new=X_frs,
             sample_weight_train=spi_weight,
-            mean_quantile=0.18,
+            new_weight=frs_weight,
+            target=spi_sim.calc("dividend_income").sum(),
         )
         print(" completed.")
-        imputed_dividend_income *= (
-            frs_sim.calc("dividend_income", year).values > 0
-        )
         frs_sim.simulation.set_input(
             "dividend_income", year, imputed_dividend_income
         )
