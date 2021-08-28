@@ -7,6 +7,7 @@ from zipfile import ZipFile
 @dataset
 class RawCPS:
     name = "raw_cps"
+    openfisca_us_compatible
 
     def generate(year):
         try:
