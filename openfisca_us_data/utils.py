@@ -18,8 +18,8 @@ def dataset(cls):
     def generate():
         raise NotImplementedError("No dataset generation function specified")
 
-    if cls.openfisca_uk_compatible:
-        cls.data_dir = data_folder(DATA_DIR / "openfisca_uk")
+    if cls.openfisca_us_compatible:
+        cls.data_dir = data_folder(DATA_DIR / "openfisca_us")
     else:
         cls.data_dir = data_folder(DATA_DIR / "external")
 
