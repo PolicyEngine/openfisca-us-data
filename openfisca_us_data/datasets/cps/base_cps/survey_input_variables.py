@@ -1,6 +1,12 @@
 def get_CPS_variables():
     from openfisca_core.model_api import Variable, YEAR
-    from openfisca_us.entities import Person, TaxUnit, Household, Family, SPMUnit
+    from openfisca_us.entities import (
+        Person,
+        TaxUnit,
+        Household,
+        Family,
+        SPMUnit,
+    )
 
     class P_INT_VAL(Variable):
         value_type = float
