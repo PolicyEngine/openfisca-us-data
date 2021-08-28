@@ -2,11 +2,7 @@ from argparse import ArgumentParser
 
 
 def main():
-    datasets = {
-        ds.name: ds
-        for ds in (
-        )
-    }
+    datasets = {ds.name: ds for ds in ()}
     parser = ArgumentParser(
         description="A utility for storing OpenFisca-US-compatible microdata."
     )

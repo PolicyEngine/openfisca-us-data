@@ -1,5 +1,5 @@
-def test_synth_downloads():
-    from openfisca_uk_data import SynthFRS
+def test_cps_downloads():
+    from openfisca_us_data import RawCPS
 
-    SynthFRS.save()
-    assert SynthFRS.file(2018).exists()
+    RawCPS.generate(2020)
+    assert RawCPS.file(2020).exists()

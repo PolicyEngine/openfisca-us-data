@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="openfisca-uk-data",
+    name="openfisca-us-data",
     version="0.1.0",
     description=(
-        "A Python package to manage OpenFisca-UK-compatible microdata"
+        "A Python package to manage OpenFisca-US-compatible microdata"
     ),
-    url="http://github.com/nikhilwoodruff/openfisca-uk-data",
+    url="http://github.com/ubicenter/openfisca-us-data",
     author="Nikhil Woodruff",
     author_email="nikhil.woodruff@outlook.com",
     packages=find_packages(),
@@ -19,6 +19,6 @@ setup(
         "synthimpute @ git+https://github.com/PSLmodels/synthimpute",
     ],
     entry_points={
-        "console_scripts": ["openfisca-uk-data=openfisca_uk_data.cli:main"],
+        "console_scripts": ["openfisca-us-data=openfisca_us_data.cli:main"],
     },
 )

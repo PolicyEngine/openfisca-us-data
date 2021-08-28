@@ -1,11 +1,7 @@
 from pathlib import Path
-from openfisca_uk_data.datasets import (
-    RawFRS,
-    BaseFRS,
-    FRS,
-    SynthFRS,
-    FRS_SPI_Adjusted,
-    RawSPI,
-    BaseSPI,
-    SPI,
+from openfisca_us_data.datasets import *
+
+DATASETS = (
+    BaseCPS,
+    RawCPS,
 )
