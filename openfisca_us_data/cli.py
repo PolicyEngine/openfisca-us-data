@@ -1,8 +1,9 @@
 from argparse import ArgumentParser
+from openfisca_us_data import DATASETS
 
 
 def main():
-    datasets = {ds.name: ds for ds in ()}
+    datasets = {ds.name: ds for ds in DATASETS}
     parser = ArgumentParser(
         description="A utility for storing OpenFisca-US-compatible microdata."
     )

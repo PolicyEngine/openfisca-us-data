@@ -39,7 +39,7 @@ HOUSEHOLD_COLUMNS = (
 @dataset
 class BaseCPS:
     name = "base_cps"
-    model = US
+    model = "openfisca_us"
     input_reform_from_year = from_BaseCPS
 
     def generate(year):
