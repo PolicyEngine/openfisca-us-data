@@ -5,7 +5,7 @@ from openfisca_core.model_api import Variable, YEAR, Reform
 
 
 def get_input_variables():
-    from openfisca_us.entities import Person
+    from openfisca_us.entities import Person, TaxUnit, Household, Family, SPMUnit
 
     class interest_income(Variable):
         value_type = float
@@ -15,15 +15,6 @@ def get_input_variables():
 
         def formula(person, period):
             return person("P_INT_VAL", period)
-
-    class e01500(Variable):
-        value_type = float
-        entity = TaxUnit
-        label = u"a new variable"
-        definition_period = YEAR
-
-        def formula(tax_unit, period):
-            return tax_unit.sum(tax_unit.members("P_WSAL_VAL", period))
 
     input_variables = [interest_income]
 
