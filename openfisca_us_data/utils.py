@@ -14,7 +14,6 @@ import requests
 from tqdm import tqdm
 import numpy as np
 
-UK = "openfisca_uk"
 US = "openfisca_us"
 
 
