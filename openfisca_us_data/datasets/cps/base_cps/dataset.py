@@ -12,7 +12,16 @@ PERSON_COLUMNS = (
     "person_spm_unit_id",
     "person_household_id",
     "person_weight",
+    "P_WSAL_VAL",
     "P_INT_VAL",
+    "P_SEMP_VAL",
+    "P_FRSE_VAL",
+    "P_DIV_VAL",
+    "P_RNT_VAL",
+    # "P_RTM_VAL",
+    # "P_ALIMONY",
+    # "P_SS_IMPUTE",
+    # "P_UI_IMPUTE"
 )
 
 TAXUNIT_COLUMNS = (
