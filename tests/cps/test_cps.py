@@ -10,4 +10,4 @@ def test_income_variables():
 
     sim = Microsimulation(dataset=BaseCPS)
 
-    assert 8e13 < sim.calc("e00200", period=2020).sum() < 1e13
+    assert 8e12 < sim.calc("e00200", period=2020).sum() < 1e12
