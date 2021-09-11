@@ -3,5 +3,5 @@ format:
 test:
 	pytest tests
 install:
-	pip install -e .
 	pip install git+https://github.com/ubicenter/openfisca-us
+	pip install -e .

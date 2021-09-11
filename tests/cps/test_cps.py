@@ -1,7 +1,8 @@
 from openfisca_us_data import CPS
 
 if 2020 not in CPS.years:
-	CPS.generate(2020)
+    CPS.generate(2020)
+
 
 def test_income_variables():
     from openfisca_us import Microsimulation
