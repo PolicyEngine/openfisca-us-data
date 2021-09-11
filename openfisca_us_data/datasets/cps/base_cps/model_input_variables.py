@@ -12,7 +12,7 @@ def get_input_variables():
         Family,
         SPMUnit,
     )
-    from openfisca_uk.tools.general import where
+    from openfisca_us.tools.general import where
 
     class tax_unit_weight(Variable):
         value_type = float
