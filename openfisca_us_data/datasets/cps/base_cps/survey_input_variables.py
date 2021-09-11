@@ -44,12 +44,6 @@ def get_CPS_variables():
         label = u"Rent"
         definition_period = YEAR
 
-    class P_RTM_VAL(Variable):
-        value_type = float
-        entity = Person
-        label = u"label"
-        definition_period = YEAR
-
     class P_OI_OFF(Variable):
         value_type = float
         entity = Person
@@ -74,18 +68,15 @@ def get_CPS_variables():
         label = u"Reported unemployment benefits"
         definition_period = YEAR
 
-    CPS_variables = [
+    return [
         P_WSAL_VAL,
         P_INT_VAL,
         P_SEMP_VAL,
         P_FRSE_VAL,
         P_DIV_VAL,
         P_RNT_VAL,
-        # P_RTM_VAL,
         P_OI_OFF,
         P_OI_VAL,
         P_SS_VAL,
         P_UC_VAL,
     ]
-
-    return CPS_variables

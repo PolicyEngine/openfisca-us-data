@@ -123,7 +123,7 @@ def get_input_variables():
         def formula(person, period, parameters):
             return person("P_UC_VAL", period)
 
-    input_variables = [
+    return [
         tax_unit_weight,
         e00200,
         interest,
@@ -136,8 +136,6 @@ def get_input_variables():
         e02400,
         e02300,
     ]
-
-    return input_variables
 
 
 def from_BaseCPS(year: int = 2020):
