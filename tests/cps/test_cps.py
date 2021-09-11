@@ -8,6 +8,6 @@ BaseCPS.generate(2020)
 def test_income_variables():
     from openfisca_us import Microsimulation
 
-    sim = Microsimulation()
+    sim = Microsimulation(dataset=BaseCPS)
 
-    assert 8e11 < sim.calc("e00200", period=2020).sum() < 10e11
+    assert 8e13 < sim.calc("e00200", period=2020).sum() < 1e13
