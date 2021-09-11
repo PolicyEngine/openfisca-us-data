@@ -1,13 +1,11 @@
-from openfisca_us_data import RawCPS, BaseCPS
+from openfisca_us_data import CPS
 
-if 2020 not in RawCPS.years:
-    RawCPS.generate(2020)
-BaseCPS.generate(2020)
-
+if 2020 not in CPS.years:
+	CPS.generate(2020)
 
 def test_income_variables():
     from openfisca_us import Microsimulation
 
-    sim = Microsimulation(dataset=BaseCPS)
+    sim = Microsimulation(dataset=CPS)
 
     assert 8e12 < sim.calc("e00200", period=2020).sum() < 1e13
