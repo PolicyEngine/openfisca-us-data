@@ -10,4 +10,4 @@ def test_income_variables():
 
     sim = Microsimulation()
 
-    print(sim.calc("interest").sum())
+    assert 8e11 < sim.calc("e00200", period=2020).sum() < 10e11
