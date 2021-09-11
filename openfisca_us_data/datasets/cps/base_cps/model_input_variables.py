@@ -12,7 +12,21 @@ def get_input_variables():
         Family,
         SPMUnit,
     )
-    from openfisca_uk.tools.general import *
+    from openfisca_uk.tools.general import where
+
+    class tax_unit_weight(Variable):
+        value_type = float
+        entity = TaxUnit
+        label = u"Tax unit weight"
+        definition_period = YEAR
+
+        def formula(tax_unit, period, parameters):
+            # Tax unit weight is the weight of the containing family
+            return tax_unit.value_from_first_person(
+                tax_unit.members.family.project(
+                    tax_unit.members.family("family_weight", period)
+                )
+            )
 
     class e00200(Variable):
         value_type = float
@@ -98,7 +112,7 @@ def get_input_variables():
         definition_period = YEAR
 
         def formula(person, period, parameters):
-            return person("P_SS_IMPUTE", period)
+            return person("P_SS_VAL", period)
 
     class e02300(Variable):
         value_type = float
@@ -110,6 +124,7 @@ def get_input_variables():
             return person("P_UC_VAL", period)
 
     input_variables = [
+        tax_unit_weight,
         e00200,
         interest,
         e00900,
