@@ -12,6 +12,7 @@ def get_input_variables():
         Family,
         SPMUnit,
     )
+    from openfisca_uk.tools.general import *
 
     class e00200(Variable):
         value_type = float
@@ -74,7 +75,11 @@ def get_input_variables():
         definition_period = YEAR
 
         def formula(person, period, parameters):
-            return person("P_RTM_VAL", period)
+            other_inc_type = person("P_OI_OFF", period)
+            has_private_pensions = other_inc_type == 2
+            has_annuities = other_inc_type == 13
+            other_inc = person("P_OI_VAL", period)
+            return (has_private_pensions | has_annuities) * other_inc
 
     class e00800(Variable):
         value_type = float
@@ -83,7 +88,8 @@ def get_input_variables():
         definition_period = YEAR
 
         def formula(person, period, parameters):
-            return person("P_ALIMONY", period)
+            has_alimony = person("P_OI_OFF", period) == 20
+            return has_alimony * person("P_OI_VAL", period)
 
     class e02400(Variable):
         value_type = float
@@ -101,7 +107,7 @@ def get_input_variables():
         definition_period = YEAR
 
         def formula(person, period, parameters):
-            return person("P_UI_IMPUTE", period)
+            return person("P_UC_VAL", period)
 
     input_variables = [
         e00200,
@@ -110,10 +116,10 @@ def get_input_variables():
         e02100,
         divs,
         rents,
-        # e01500,
-        # e00800,
-        # e02400,
-        # e02300,
+        e01500,
+        e00800,
+        e02400,
+        e02300,
     ]
 
     return input_variables

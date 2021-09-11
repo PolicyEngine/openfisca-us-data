@@ -50,22 +50,28 @@ def get_CPS_variables():
         label = u"label"
         definition_period = YEAR
 
-    class P_ALIMONY(Variable):
+    class P_OI_OFF(Variable):
         value_type = float
         entity = Person
-        label = u"Alimony"
+        label = u"Type of other income source"
         definition_period = YEAR
 
-    class P_SS_IMPUTE(Variable):
+    class P_OI_VAL(Variable):
         value_type = float
         entity = Person
-        label = u"Imputed Social Security"
+        label = u"Other income amount"
         definition_period = YEAR
 
-    class P_UI_IMPUTE(Variable):
+    class P_SS_VAL(Variable):
         value_type = float
         entity = Person
-        label = u"Imputed unemployment insurance"
+        label = u"Reported Social Security"
+        definition_period = YEAR
+
+    class P_UC_VAL(Variable):
+        value_type = float
+        entity = Person
+        label = u"Reported unemployment benefits"
         definition_period = YEAR
 
     CPS_variables = [
@@ -76,9 +82,10 @@ def get_CPS_variables():
         P_DIV_VAL,
         P_RNT_VAL,
         # P_RTM_VAL,
-        P_ALIMONY,
-        P_SS_IMPUTE,
-        P_UI_IMPUTE,
+        P_OI_OFF,
+        P_OI_VAL,
+        P_SS_VAL,
+        P_UC_VAL,
     ]
 
     return CPS_variables
