@@ -12,7 +12,6 @@ jobs:
         with:
           args: ". -l 79 --check"
   Test:
-    if: github.repository == 'UBICenter/openfisca-us-data'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo

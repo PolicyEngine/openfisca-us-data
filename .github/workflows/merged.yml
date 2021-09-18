@@ -12,7 +12,7 @@ jobs:
         with:
           args: ". -l 79 --check"
   Test:
-    if: github.repository == 'UBICenter/openfisca-us-data'
+    if: github.repository == 'PolicyEngine/openfisca-us-data'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -24,7 +24,7 @@ jobs:
       - name: Run tests
         run: make test
   Publish to PyPI:
-    if: github.repository == 'UBICenter/openfisca-us-data'
+    if: github.repository == 'PolicyEngine/openfisca-us-data'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
