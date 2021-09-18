@@ -38,6 +38,6 @@ class CustomDataset:
 ### RawCPS
 - Not OpenFisca-US-compatible
 - Contains the tables from the raw microdata
-### BaseCPS
+### CPS
 - OpenFisca-US-compatible
-- Loads the named survey variables, and specifies how these should be transformed into the model's input variables using OpenFisca formulas
+- Contains OpenFisca-US-compatible input arrays.
