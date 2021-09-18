@@ -38,11 +38,11 @@ class RawCPS:
                 progress_bar.close()
                 zipfile = ZipFile(file)
                 with zipfile.open(f"pppub{year_code}.csv") as f:
-                    storage["person"] = pd.read_csv(f)
+                    storage["person"] = pd.read_csv(f).fillna(0)
                 with zipfile.open(f"ffpub{year_code}.csv") as f:
-                    storage["family"] = pd.read_csv(f)
+                    storage["family"] = pd.read_csv(f).fillna(0)
                 with zipfile.open(f"hhpub{year_code}.csv") as f:
-                    storage["household"] = pd.read_csv(f)
+                    storage["household"] = pd.read_csv(f).fillna(0)
         except Exception as e:
             raise ValueError(
                 f"Attempted to extract and save the CSV files, but encountered an error: {e.with_traceback()}"

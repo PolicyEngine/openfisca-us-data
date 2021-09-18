@@ -62,13 +62,13 @@ def dataset(cls):
 
     cls.filename = staticmethod(filename)
 
-    def load(year, key: str = None) -> pd.DataFrame:
+    def load(year, key: str = None, mode: str = "r") -> pd.DataFrame:
         file = cls.data_dir / cls.filename(year)
         if cls.model:
             if key is None:
-                return h5py.File(file)
+                return h5py.File(file, mode=mode)
             else:
-                with h5py.File(file) as f:
+                with h5py.File(file, mode=mode) as f:
                     values = np.array(f[key])
                 return values
         else:
