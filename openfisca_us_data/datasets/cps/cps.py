@@ -71,7 +71,7 @@ def add_ID_variables(
         cps["person_tax_unit_id"][...]
     ).first()
 
-    cps["spm_unit_weight"] = person.SPM_Weight.groupby(
+    cps["spm_unit_weight"] = person.SPM_WEIGHT.groupby(
         cps["person_spm_unit_id"][...]
     ).first()
 
