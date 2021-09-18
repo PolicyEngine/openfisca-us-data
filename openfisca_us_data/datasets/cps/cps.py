@@ -71,6 +71,10 @@ def add_ID_variables(
         cps["person_tax_unit_id"][...]
     ).first()
 
+    cps["spm_unit_weight"] = person.SPM_Weight.groupby(
+        cps["person_spm_unit_id"][...]
+    ).first()
+
     cps["household_weight"] = household.HSUP_WGT / 1e2
 
 
