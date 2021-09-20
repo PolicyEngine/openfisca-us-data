@@ -24,26 +24,41 @@ class CPS:
         raw_data = RawCPS.load(year)
         cps = h5py.File(CPS.file(year), mode="w")
 
-        person, family, household = [
-            raw_data[entity] for entity in ("person", "family", "household")
+        person, tax_unit, family, spm_unit, household = [
+            raw_data[entity]
+            for entity in (
+                "person",
+                "tax_unit",
+                "family",
+                "spm_unit",
+                "household",
+            )
         ]
 
-        add_ID_variables(cps, person, family, household)
-        add_basic_income_variables(cps, person)
+        add_ID_variables(cps, person, tax_unit, family, spm_unit, household)
+        add_personal_income_variables(cps, person)
+        add_SPM_variables(cps, spm_unit)
 
         raw_data.close()
         cps.close()
 
 
 def add_ID_variables(
-    cps: h5py.File, person: DataFrame, family: DataFrame, household: DataFrame
+    cps: h5py.File,
+    person: DataFrame,
+    tax_unit: DataFrame,
+    family: DataFrame,
+    spm_unit: DataFrame,
+    household: DataFrame,
 ):
     """Add basic ID and weight variables.
 
     Args:
         cps (h5py.File): The CPS dataset file.
         person (DataFrame): The person table of the ASEC.
+        person (DataFrame): The tax unit table created from the person table of the ASEC.
         family (DataFrame): The family table of the ASEC.
+        person (DataFrame): The SPM unit table created from the person table of the ASEC.
         household (DataFrame): The household table of the ASEC.
     """
     # Add primary and foreign keys
@@ -52,8 +67,8 @@ def add_ID_variables(
     cps["household_id"] = household.H_SEQ
     cps["person_tax_unit_id"] = person.TAX_ID
     cps["person_spm_unit_id"] = person.SPM_ID
-    cps["tax_unit_id"] = Series(cps["person_tax_unit_id"][...]).unique()
-    cps["spm_unit_id"] = Series(cps["person_spm_unit_id"][...]).unique()
+    cps["tax_unit_id"] = tax_unit.TAX_ID
+    cps["spm_unit_id"] = spm_unit.SPM_ID
     cps["person_household_id"] = person.PH_SEQ
     cps["person_family_id"] = person.PH_SEQ * 10 + person.PF_SEQ
 
@@ -71,15 +86,13 @@ def add_ID_variables(
         cps["person_tax_unit_id"][...]
     ).first()
 
-    cps["spm_unit_weight"] = person.SPM_WEIGHT.groupby(
-        cps["person_spm_unit_id"][...]
-    ).first()
+    cps["spm_unit_weight"] = spm_unit.SPM_WEIGHT / 1e2
 
     cps["household_weight"] = household.HSUP_WGT / 1e2
 
 
-def add_basic_income_variables(cps: h5py.File, person: DataFrame):
-    """Add basic income variables.
+def add_personal_income_variables(cps: h5py.File, person: DataFrame):
+    """Add income variables.
 
     Args:
         cps (h5py.File): The CPS dataset file.
@@ -97,3 +110,8 @@ def add_basic_income_variables(cps: h5py.File, person: DataFrame):
 
     # Alimony
     cps["e00800"] = (person.OI_OFF == 20) * person.OI_VAL
+
+
+def add_SPM_variables(cps: h5py.File, spm_unit: DataFrame):
+    cps["SPM_unit_net_income"] = spm_unit.SPM_RESOURCES
+    cps["poverty_threshold"] = spm_unit.SPM_POVTHRESHOLD
