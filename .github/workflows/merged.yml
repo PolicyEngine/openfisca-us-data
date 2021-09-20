@@ -1,0 +1,40 @@
+name: Push
+on:
+  push:
+    branches: [ master ]
+jobs:
+  Lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check formatting
+        uses: "lgeiger/black-action@master"
+        with:
+          args: ". -l 79 --check"
+  Test:
+    if: github.repository == 'PolicyEngine/openfisca-us-data'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - name: Install package
+        run: make install
+      - name: Run tests
+        run: make test
+  Publish to PyPI:
+    if: github.repository == 'PolicyEngine/openfisca-us-data'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+      - name: Build package
+        run: make
+      - name: Publish a Python distribution to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI }}

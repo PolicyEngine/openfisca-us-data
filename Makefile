@@ -1,5 +1,7 @@
 format:
 	black . -l 79
 test:
-	black . -l 79 --check
-	pytest tests
+	pytest tests -vv
+install:
+	pip install git+https://github.com/PolicyEngine/openfisca-us
+	pip install -e .

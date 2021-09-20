@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="openfisca-us-data",
-    version="0.1.0",
+    version="0.1.1",
     description=(
         "A Python package to manage OpenFisca-US-compatible microdata"
     ),
@@ -17,6 +17,8 @@ setup(
         "tables",
         "h5py",
         "synthimpute @ git+https://github.com/PSLmodels/synthimpute",
+        "pytest",
+        "pytest-dependency",
     ],
     entry_points={
         "console_scripts": ["openfisca-us-data=openfisca_us_data.cli:main"],
