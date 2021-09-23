@@ -7,7 +7,7 @@ This package allows users to store and load various US microdata sources for usa
 This package is designed to be simple to add new OpenFisca-US-compatible datasets. To add a new dataset:
 1. Add a new Python module as a single file or folder with `__init__.py` (optional)
 2. Create a class with the `@dataset` decorator (from `utils.py`)
-3. Define a `generate(year)` method
+3. Define a `generate(self, year)` method
 4. Ensure the class is imported in `openfisca_us/__init__.py` and `openfisca_us/cli.py`
 
 ## Usage
