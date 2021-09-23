@@ -37,7 +37,14 @@ class RawACS:
                 )
                 progress_bar.total = content_length_actual
                 progress_bar.close()
-                storage["person"] = person = pd.read_sas(file).fillna(0)
+                person = pd.read_sas(file, format="sas7bdat").fillna(0)
+                person.rename(
+                    columns=[
+                        person.columns.str.upper() for i in person.columns
+                    ],
+                    inplace=True,
+                )
+                storage["person"] = person
                 storage["spm_unit"] = create_SPM_unit_table(person)
                 storage["household"] = create_household_table(person)
         except Exception as e:
@@ -95,4 +102,4 @@ def create_SPM_unit_table(person: pd.DataFrame) -> pd.DataFrame:
 
 
 def create_household_table(person: pd.DataFrame) -> pd.DataFrame:
-    return person[["SERIALNO", "st", "PUMA"]].groupby(person.SERIALNO).first()
+    return person[["SERIALNO", "ST", "PUMA"]].groupby(person.SERIALNO).first()
