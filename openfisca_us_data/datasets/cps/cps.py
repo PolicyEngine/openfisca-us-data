@@ -2,6 +2,7 @@ from openfisca_us_data.utils import US, dataset
 from openfisca_us_data.datasets.cps.raw_cps import RawCPS
 from pandas import DataFrame, Series
 import h5py
+import numpy as np
 
 
 @dataset
@@ -36,6 +37,7 @@ class CPS:
         ]
 
         add_ID_variables(cps, person, tax_unit, family, spm_unit, household)
+        add_personal_variables(cps, person)
         add_personal_income_variables(cps, person)
         add_SPM_variables(cps, spm_unit)
 
@@ -89,6 +91,20 @@ def add_ID_variables(
     cps["spm_unit_weight"] = spm_unit.SPM_WEIGHT / 1e2
 
     cps["household_weight"] = household.HSUP_WGT / 1e2
+
+
+def add_personal_variables(cps: h5py.File, person: DataFrame):
+    """Add personal demographic variables.
+
+    Args:
+        cps (h5py.File): The CPS dataset file.
+        person (DataFrame): The CPS person table.
+    """
+    cps["age"] = np.where(
+        person.A_AGE.between(80, 85),
+        80 + 5 * np.random.rand(len(person)),
+        person.A_AGE,
+    )
 
 
 def add_personal_income_variables(cps: h5py.File, person: DataFrame):
