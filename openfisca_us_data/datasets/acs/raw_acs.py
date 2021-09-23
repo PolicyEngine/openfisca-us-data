@@ -8,7 +8,7 @@ import pandas as pd
 class RawACS:
     name = "raw_acs"
 
-    def generate(year: int):
+    def generate(self, year: int):
         try:
             url = f"https://www2.census.gov/programs-surveys/supplemental-poverty-measure/datasets/spm/spm_pu_{year}.sas7bdat"
             response = requests.get(url, stream=True)

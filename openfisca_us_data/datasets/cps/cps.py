@@ -9,7 +9,7 @@ class CPS:
     name = "cps"
     model = US
 
-    def generate(year: int) -> None:
+    def generate(self, year: int) -> None:
         """Generates the CPS dataset.
 
         Args:
