@@ -9,7 +9,7 @@ import pandas as pd
 class RawCPS:
     name = "raw_cps"
 
-    def generate(self, year: int):
+    def generate(year: int):
         try:
             url = f"https://www2.census.gov/programs-surveys/cps/datasets/{year}/march/asecpub{str(year)[-2:]}csv.zip"
             response = requests.get(url, stream=True)

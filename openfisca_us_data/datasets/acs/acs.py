@@ -9,7 +9,8 @@ class ACS:
     name = "acs"
     model = US
 
-    def generate(self, year: int) -> None:
+    # Note: no self because it uses a decorator.
+    def generate(year: int) -> None:
         """Generates the ACS dataset.
 
         Args:
