@@ -5,8 +5,8 @@ import pandas as pd
 
 
 @dataset
-class RawCPS:
-    name = "raw_cps"
+class RawACS:
+    name = "raw_acs"
 
     def generate(year: int):
         try:

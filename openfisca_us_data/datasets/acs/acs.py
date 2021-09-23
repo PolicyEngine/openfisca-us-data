@@ -1,5 +1,5 @@
 from openfisca_us_data.utils import US, dataset
-from openfisca_us_data.datasets.cps.raw_acs import RawACS
+from openfisca_us_data.datasets.acs.raw_acs import RawACS
 from pandas import DataFrame
 import h5py
 

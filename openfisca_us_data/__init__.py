@@ -6,4 +6,6 @@ REPO = Path(__file__).parent
 DATASETS = (
     RawCPS,
     CPS,
+    RawACS,
+    ACS
 )
