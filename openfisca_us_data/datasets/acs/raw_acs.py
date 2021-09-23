@@ -13,7 +13,7 @@ class RawACS:
             url = f"https://www2.census.gov/programs-surveys/supplemental-poverty-measure/datasets/spm/spm_pu_{year}.sas7bdat"
             response = requests.get(url, stream=True)
             total_size_in_bytes = int(
-                response.headers.get("content-length", 200e6)
+                response.headers.get("content-length", 900e6)
             )
             progress_bar = tqdm(
                 total=total_size_in_bytes,
@@ -26,7 +26,7 @@ class RawACS:
                 f"Attempted to download the ACS SPM research file for {year}, but encountered an error: {e.with_traceback()}"
             )
         try:
-            with BytesIO() as file, pd.HDFStore(RawCPS.file(year)) as storage:
+            with BytesIO() as file, pd.HDFStore(RawACS.file(year)) as storage:
                 content_length_actual = 0
                 for data in response.iter_content(int(1e6)):
                     progress_bar.update(len(data))
