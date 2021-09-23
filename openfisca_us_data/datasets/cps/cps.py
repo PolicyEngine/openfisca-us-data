@@ -129,5 +129,19 @@ def add_personal_income_variables(cps: h5py.File, person: DataFrame):
 
 
 def add_SPM_variables(cps: h5py.File, spm_unit: DataFrame):
-    cps["SPM_unit_net_income"] = spm_unit.SPM_RESOURCES
-    cps["poverty_threshold"] = spm_unit.SPM_POVTHRESHOLD
+    SPM_RENAMES = dict(
+        poverty_threshold="SPM_POVTHRESHOLD",
+        SPM_unit_total_income="SPM_TOTVAL",
+        SPM_unit_SNAP="SPM_SNAPSUB",
+        SPM_unit_capped_housing_subsidy="SPM_CAPHOUSESUB",
+        SPM_unit_school_lunch_subsity="SPM_SCHLUNCH",
+        SPM_unit_energy_subsidy="SPM_ENGVAL",
+        SPM_unit_WIC="SPM_WICVAL",
+        SPM_unit_federal_tax="SPM_FEDTAX",
+        SPM_unit_state_tax="SPM_STTAX",
+        SPM_unit_work_childcare_expenses="SPM_CAPWKCCXPNS",
+        SPM_unit_medical_expenses="SPM_MEDXPNS",
+    )
+
+    for openfisca_variable, asec_variable in SPM_RENAMES.items():
+        cps[openfisca_variable] = spm_unit[asec_variable]
