@@ -66,8 +66,6 @@ def add_ID_variables(
     # Add weights
     acs["person_weight"] = person.WT / 1e2
 
-    acs["spm_unit_weight"] = spm_unit.SPM_WEIGHT / 1e2
-
 
 def add_SPM_variables(acs: h5py.File, spm_unit: DataFrame):
     acs["SPM_unit_net_income"] = spm_unit.SPM_RESOURCES
