@@ -57,7 +57,7 @@ def add_ID_variables(
         household (DataFrame): The household table of the ACS.
     """
     # Add primary and foreign keys
-    acs["person_id"] = person.SERIALNO * 100 + person.SPORDER
+    acs["person_id"] = person.SERIALNO * 1e2 + person.SPORDER
     acs["person_spm_unit_id"] = person.SPM_ID
     acs["spm_unit_id"] = spm_unit.SPM_ID
     # ACS doesn't have tax units.
