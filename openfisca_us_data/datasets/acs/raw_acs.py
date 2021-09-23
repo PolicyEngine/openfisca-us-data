@@ -32,7 +32,9 @@ class RawACS:
                     progress_bar.update(len(data))
                     content_length_actual += len(data)
                     file.write(data)
-                progress_bar.set_description("Downloaded ACS SPM research file")
+                progress_bar.set_description(
+                    "Downloaded ACS SPM research file"
+                )
                 progress_bar.total = content_length_actual
                 progress_bar.close()
                 storage["person"] = person = pd.read_sas(file).fillna(0)

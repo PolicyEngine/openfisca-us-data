@@ -64,7 +64,7 @@ def add_ID_variables(
 
     # Add weights
     acs["person_weight"] = person.WT / 1e2
-    
+
     acs["spm_unit_weight"] = spm_unit.SPM_WEIGHT / 1e2
 
 
