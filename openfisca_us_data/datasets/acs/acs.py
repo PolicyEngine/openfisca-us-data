@@ -64,7 +64,7 @@ def add_ID_variables(
     acs["household_id"] = household.SERIALNO
 
     # Add weights
-    acs["person_weight"] = person.WT / 1e2
+    acs["person_weight"] = person.WT
 
 
 def add_SPM_variables(acs: h5py.File, spm_unit: DataFrame):
