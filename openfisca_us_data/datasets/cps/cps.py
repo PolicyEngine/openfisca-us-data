@@ -2,6 +2,7 @@ from openfisca_us_data.utils import US, dataset
 from openfisca_us_data.datasets.cps.raw_cps import RawCPS
 from pandas import DataFrame, Series
 import h5py
+import numpy as np
 
 
 @dataset
@@ -36,6 +37,7 @@ class CPS:
         ]
 
         add_ID_variables(cps, person, tax_unit, family, spm_unit, household)
+        add_personal_variables(cps, person)
         add_personal_income_variables(cps, person)
         add_SPM_variables(cps, spm_unit)
 
@@ -91,6 +93,20 @@ def add_ID_variables(
     cps["household_weight"] = household.HSUP_WGT / 1e2
 
 
+def add_personal_variables(cps: h5py.File, person: DataFrame):
+    """Add personal demographic variables.
+
+    Args:
+        cps (h5py.File): The CPS dataset file.
+        person (DataFrame): The CPS person table.
+    """
+    cps["age"] = np.where(
+        person.A_AGE.between(80, 85),
+        80 + 5 * np.random.rand(len(person)),
+        person.A_AGE,
+    )
+
+
 def add_personal_income_variables(cps: h5py.File, person: DataFrame):
     """Add income variables.
 
@@ -113,5 +129,19 @@ def add_personal_income_variables(cps: h5py.File, person: DataFrame):
 
 
 def add_SPM_variables(cps: h5py.File, spm_unit: DataFrame):
-    cps["SPM_unit_net_income"] = spm_unit.SPM_RESOURCES
-    cps["poverty_threshold"] = spm_unit.SPM_POVTHRESHOLD
+    SPM_RENAMES = dict(
+        poverty_threshold="SPM_POVTHRESHOLD",
+        SPM_unit_total_income="SPM_TOTVAL",
+        SPM_unit_SNAP="SPM_SNAPSUB",
+        SPM_unit_capped_housing_subsidy="SPM_CAPHOUSESUB",
+        SPM_unit_school_lunch_subsity="SPM_SCHLUNCH",
+        SPM_unit_energy_subsidy="SPM_ENGVAL",
+        SPM_unit_WIC="SPM_WICVAL",
+        SPM_unit_federal_tax="SPM_FEDTAX",
+        SPM_unit_state_tax="SPM_STTAX",
+        SPM_unit_work_childcare_expenses="SPM_CAPWKCCXPNS",
+        SPM_unit_medical_expenses="SPM_MEDXPNS",
+    )
+
+    for openfisca_variable, asec_variable in SPM_RENAMES.items():
+        cps[openfisca_variable] = spm_unit[asec_variable]
