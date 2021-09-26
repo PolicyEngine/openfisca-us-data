@@ -9,21 +9,20 @@ class RawACS:
     name = "raw_acs"
 
     def generate(year: int):
-        try:
-            url = f"https://www2.census.gov/programs-surveys/supplemental-poverty-measure/datasets/spm/spm_pu_{year}.sas7bdat"
-            response = requests.get(url, stream=True)
-            total_size_in_bytes = int(
-                response.headers.get("content-length", 900e6)
-            )
-            progress_bar = tqdm(
-                total=total_size_in_bytes,
-                unit="iB",
-                unit_scale=True,
-                desc="Downloading ACS SPM research file",
-            )
-        except Exception as e:
+        url = f"https://www2.census.gov/programs-surveys/supplemental-poverty-measure/datasets/spm/spm_pu_{year}.sas7bdat"
+        response = requests.get(url, stream=True)
+        total_size_in_bytes = int(
+            response.headers.get("content-length", 900e6)
+        )
+        progress_bar = tqdm(
+            total=total_size_in_bytes,
+            unit="iB",
+            unit_scale=True,
+            desc="Downloading ACS SPM research file",
+        )
+        if response.status_code == 404:
             raise FileNotFoundError(
-                f"Attempted to download the ACS SPM research file for {year}, but encountered an error: {e.with_traceback()}"
+                "Received a 404 response when fetching the data."
             )
         try:
             with BytesIO() as file, pd.HDFStore(RawACS.file(year)) as storage:

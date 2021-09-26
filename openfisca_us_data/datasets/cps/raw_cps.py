@@ -10,21 +10,20 @@ class RawCPS:
     name = "raw_cps"
 
     def generate(year: int):
-        try:
-            url = f"https://www2.census.gov/programs-surveys/cps/datasets/{year}/march/asecpub{str(year)[-2:]}csv.zip"
-            response = requests.get(url, stream=True)
-            total_size_in_bytes = int(
-                response.headers.get("content-length", 200e6)
-            )
-            progress_bar = tqdm(
-                total=total_size_in_bytes,
-                unit="iB",
-                unit_scale=True,
-                desc="Downloading ASEC",
-            )
-        except Exception as e:
+        url = f"https://www2.census.gov/programs-surveys/cps/datasets/{year}/march/asecpub{str(year)[-2:]}csv.zip"
+        response = requests.get(url, stream=True)
+        total_size_in_bytes = int(
+            response.headers.get("content-length", 200e6)
+        )
+        progress_bar = tqdm(
+            total=total_size_in_bytes,
+            unit="iB",
+            unit_scale=True,
+            desc="Downloading ASEC",
+        )
+        if response.status_code == 404:
             raise FileNotFoundError(
-                f"Attempted to download the ASEC for {year}, but encountered an error: {e.with_traceback()}"
+                "Received a 404 response when fetching the data."
             )
         try:
             year_code = str(year)[-2:]
