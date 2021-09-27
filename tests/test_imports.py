@@ -11,3 +11,11 @@ def test_RawCPS_import():
 
 def test_CPS_import():
     from openfisca_us_data import CPS
+
+
+def test_RawACS_import():
+    from openfisca_us_data import RawACS
+
+
+def test_ACS_import():
+    from openfisca_us_data import ACS
