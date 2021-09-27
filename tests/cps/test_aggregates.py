@@ -1,4 +1,4 @@
-from openfisca_us_data import CPS, REPO
+from openfisca_us_data import CPS, ACS, REPO
 from openfisca_us import Microsimulation
 import pytest
 import yaml
@@ -6,7 +6,8 @@ import pandas as pd
 from itertools import product
 
 MAX_REL_ERROR = 0.05
-YEARS = (2020,)
+CPS_YEARS = (2020,)
+ACS_YEARS = (2018,)
 VARIABLES = (
     "e00200",
     "e00900",
@@ -21,17 +22,30 @@ sims = {}
 
 
 @pytest.mark.dependency(name="dataset")
-@pytest.mark.parametrize("year", (2020,))
-def test_dataset_generates(year):
+@pytest.mark.parametrize("year", CPS_YEARS)
+def test_CPS_dataset_generates(year):
     CPS.generate(year)
 
 
+@pytest.mark.dependency(name="dataset")
+@pytest.mark.parametrize("year", ACS_YEARS)
+def test_ACS_dataset_generates(year):
+    ACS.generate(year)
+
+
 @pytest.mark.dependency(depends=["dataset"])
-@pytest.mark.parametrize("year", (2020,))
-def test_openfisca_us_compatible(year):
+@pytest.mark.parametrize("year", CPS_YEARS)
+def test_cps_openfisca_us_compatible(year):
     from openfisca_us import Microsimulation
 
     Microsimulation(dataset=CPS, year=year)
+
+@pytest.mark.dependency(depends=["dataset"])
+@pytest.mark.parametrize("year", (2020,))
+def test_acs_openfisca_us_compatible(year):
+    from openfisca_us import Microsimulation
+
+    Microsimulation(dataset=ACS, year=year)
 
 
 @pytest.mark.dependency(depends=["dataset"])
