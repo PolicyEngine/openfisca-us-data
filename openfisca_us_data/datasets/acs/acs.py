@@ -26,12 +26,7 @@ class ACS:
         acs = h5py.File(ACS.file(year), mode="w")
 
         person, spm_unit, household = [
-            raw_data[entity]
-            for entity in (
-                "person",
-                "spm_unit",
-                "household",
-            )
+            raw_data[entity] for entity in ("person", "spm_unit", "household")
         ]
 
         add_ID_variables(acs, person, spm_unit, household)
