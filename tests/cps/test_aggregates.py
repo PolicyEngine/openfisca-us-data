@@ -42,7 +42,7 @@ def test_cps_openfisca_us_compatible(year):
 
 
 @pytest.mark.dependency(depends=["dataset"])
-@pytest.mark.parametrize("year", (2020,))
+@pytest.mark.parametrize("year", ACS_YEARS)
 def test_acs_openfisca_us_compatible(year):
     from openfisca_us import Microsimulation
 
