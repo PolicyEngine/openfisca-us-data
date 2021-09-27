@@ -40,6 +40,7 @@ def test_cps_openfisca_us_compatible(year):
 
     Microsimulation(dataset=CPS, year=year)
 
+
 @pytest.mark.dependency(depends=["dataset"])
 @pytest.mark.parametrize("year", (2020,))
 def test_acs_openfisca_us_compatible(year):
@@ -49,7 +50,7 @@ def test_acs_openfisca_us_compatible(year):
 
 
 @pytest.mark.dependency(depends=["dataset"])
-@pytest.mark.parametrize("year,variable", product(YEARS, VARIABLES))
+@pytest.mark.parametrize("year,variable", product(CPS_YEARS, VARIABLES))
 def test_agg_against_taxcalc(year, variable):
     if year not in sims:
         sims[year] = Microsimulation(dataset=CPS, year=year)
@@ -70,7 +71,7 @@ def _get_taxcalc_aggregates(
             year: [
                 (cps[column] * weights[f"WT{year}"]).sum() for column in cps
             ]
-            for year in YEARS
+            for year in CPS_YEARS
         }
     )
     return aggregates
