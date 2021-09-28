@@ -58,9 +58,11 @@ def add_ID_variables(
     Args:
         cps (h5py.File): The CPS dataset file.
         person (DataFrame): The person table of the ASEC.
-        person (DataFrame): The tax unit table created from the person table of the ASEC.
+        tax_unit (DataFrame): The tax unit table created from the person table
+            of the ASEC.
         family (DataFrame): The family table of the ASEC.
-        person (DataFrame): The SPM unit table created from the person table of the ASEC.
+        spm_unit (DataFrame): The SPM unit table created from the person table
+            of the ASEC.
         household (DataFrame): The household table of the ASEC.
     """
     # Add primary and foreign keys
