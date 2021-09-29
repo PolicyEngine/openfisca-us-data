@@ -17,7 +17,7 @@ VARIABLES = (
     "e00800",
 )
 with open(REPO.parent / "tests" / "cps" / "taxcalc_cps.yml", "r") as f:
-    tc = yaml.load(f)
+    tc = yaml.safe_load(f)
 sims = {}
 
 
