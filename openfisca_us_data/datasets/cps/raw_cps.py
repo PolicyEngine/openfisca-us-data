@@ -13,7 +13,7 @@ class RawCPS:
         # Files are named for a year after the year the survey represents.
         # For example, the 2020 CPS was administered in March 2021, so it's
         # named 2021.
-        file_year = year + 1
+        file_year = int(year) + 1
         file_year_code = str(file_year)[-2:]
         url = f"https://www2.census.gov/programs-surveys/cps/datasets/{file_year}/march/asecpub{file_year_code}csv.zip"
         response = requests.get(url, stream=True)
