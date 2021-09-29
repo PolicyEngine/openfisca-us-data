@@ -9,7 +9,7 @@ import pandas as pd
 class RawCPS:
     name = "raw_cps"
 
-    def generate(year: int):
+    def generate(year: int) -> None:
         # Files are named for a year after the year the survey represents.
         # For example, the 2020 CPS was administered in March 2021, so it's
         # named 2021.
