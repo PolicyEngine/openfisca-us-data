@@ -5,7 +5,9 @@ import yaml
 import pandas as pd
 from itertools import product
 
-MAX_REL_ERROR = 0.05
+# Tolerance when comparing totals against taxcalc.
+# We don't expect these to match since taxcalc uses its own weights.
+MAX_REL_ERROR = 0.1
 CPS_YEARS = (2020,)
 ACS_YEARS = (2018,)
 VARIABLES = (
@@ -59,18 +61,13 @@ def test_agg_against_taxcalc(year, variable):
     assert abs(result / target) < MAX_REL_ERROR
 
 
-def _get_taxcalc_aggregates(
-    cps_csv: str, cps_weights_csv: str
-) -> pd.DataFrame:
+def _get_taxcalc_aggregates(cps_csv: str, cps_weights_csv: str) -> pd.DataFrame:
     cps, weights = [
-        pd.read_csv(file, compression="gzip")
-        for file in (cps_csv, cps_weights_csv)
+        pd.read_csv(file, compression="gzip") for file in (cps_csv, cps_weights_csv)
     ]
     aggregates = pd.DataFrame(
         {
-            year: [
-                (cps[column] * weights[f"WT{year}"]).sum() for column in cps
-            ]
+            year: [(cps[column] * weights[f"WT{year}"]).sum() for column in cps]
             for year in CPS_YEARS
         }
     )
