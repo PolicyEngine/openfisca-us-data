@@ -5,7 +5,9 @@ import yaml
 import pandas as pd
 from itertools import product
 
-MAX_REL_ERROR = 0.05
+# Tolerance when comparing totals against taxcalc.
+# We don't expect these to match since taxcalc uses its own weights.
+MAX_REL_ERROR = 0.1
 CPS_YEARS = (2020,)
 ACS_YEARS = (2018,)
 VARIABLES = (
@@ -17,7 +19,7 @@ VARIABLES = (
     "e00800",
 )
 with open(REPO.parent / "tests" / "cps" / "taxcalc_cps.yml", "r") as f:
-    tc = yaml.load(f)
+    tc = yaml.safe_load(f)
 sims = {}
 
 

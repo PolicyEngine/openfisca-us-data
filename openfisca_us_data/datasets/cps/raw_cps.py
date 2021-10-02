@@ -9,8 +9,13 @@ import pandas as pd
 class RawCPS:
     name = "raw_cps"
 
-    def generate(year: int):
-        url = f"https://www2.census.gov/programs-surveys/cps/datasets/{year}/march/asecpub{str(year)[-2:]}csv.zip"
+    def generate(year: int) -> None:
+        # Files are named for a year after the year the survey represents.
+        # For example, the 2020 CPS was administered in March 2021, so it's
+        # named 2021.
+        file_year = int(year) + 1
+        file_year_code = str(file_year)[-2:]
+        url = f"https://www2.census.gov/programs-surveys/cps/datasets/{file_year}/march/asecpub{file_year_code}csv.zip"
         response = requests.get(url, stream=True)
         total_size_in_bytes = int(
             response.headers.get("content-length", 200e6)
@@ -26,7 +31,6 @@ class RawCPS:
                 "Received a 404 response when fetching the data."
             )
         try:
-            year_code = str(year)[-2:]
             with BytesIO() as file, pd.HDFStore(RawCPS.file(year)) as storage:
                 content_length_actual = 0
                 for data in response.iter_content(int(1e6)):
@@ -37,11 +41,11 @@ class RawCPS:
                 progress_bar.total = content_length_actual
                 progress_bar.close()
                 zipfile = ZipFile(file)
-                with zipfile.open(f"pppub{year_code}.csv") as f:
+                with zipfile.open(f"pppub{file_year_code}.csv") as f:
                     storage["person"] = person = pd.read_csv(f).fillna(0)
-                with zipfile.open(f"ffpub{year_code}.csv") as f:
+                with zipfile.open(f"ffpub{file_year_code}.csv") as f:
                     storage["family"] = pd.read_csv(f).fillna(0)
-                with zipfile.open(f"hhpub{year_code}.csv") as f:
+                with zipfile.open(f"hhpub{file_year_code}.csv") as f:
                     storage["household"] = pd.read_csv(f).fillna(0)
                 storage["tax_unit"] = create_tax_unit_table(person)
                 storage["spm_unit"] = create_SPM_unit_table(person)
