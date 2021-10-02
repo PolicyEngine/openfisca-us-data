@@ -2,6 +2,10 @@
 
 This package allows users to store and load various US microdata sources for usage in `openfisca-us`, with different configurations (e.g. imputations between surveys).
 
+## Installation
+
+This package can be installed via `pip install openfisca-us-data` or `pip install git+https://github.com/policyengine/openfisca-us-data`.
+
 ## General framework
 
 This package is designed to be simple to add new OpenFisca-US-compatible datasets. To add a new dataset:
