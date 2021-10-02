@@ -61,13 +61,18 @@ def test_agg_against_taxcalc(year, variable):
     assert abs(result / target) < MAX_REL_ERROR
 
 
-def _get_taxcalc_aggregates(cps_csv: str, cps_weights_csv: str) -> pd.DataFrame:
+def _get_taxcalc_aggregates(
+    cps_csv: str, cps_weights_csv: str
+) -> pd.DataFrame:
     cps, weights = [
-        pd.read_csv(file, compression="gzip") for file in (cps_csv, cps_weights_csv)
+        pd.read_csv(file, compression="gzip")
+        for file in (cps_csv, cps_weights_csv)
     ]
     aggregates = pd.DataFrame(
         {
-            year: [(cps[column] * weights[f"WT{year}"]).sum() for column in cps]
+            year: [
+                (cps[column] * weights[f"WT{year}"]).sum() for column in cps
+            ]
             for year in CPS_YEARS
         }
     )
