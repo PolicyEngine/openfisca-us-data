@@ -20,6 +20,12 @@ setup(
         "pytest",
         "pytest-dependency",
     ],
+    extras_require={
+        "dev": [
+            "autopep8",
+            "black",
+        ]
+    }
     entry_points={
         "console_scripts": ["openfisca-us-data=openfisca_us_data.cli:main"],
     },

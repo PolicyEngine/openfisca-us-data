@@ -29,10 +29,14 @@ def test_CPS_dataset_generates(year):
     CPS.generate(year)
 
 
+# Temporarily removed
+
+"""
 @pytest.mark.dependency(name="dataset")
 @pytest.mark.parametrize("year", ACS_YEARS)
 def test_ACS_dataset_generates(year):
     ACS.generate(year)
+"""
 
 
 @pytest.mark.dependency(depends=["dataset"])
@@ -43,12 +47,17 @@ def test_cps_openfisca_us_compatible(year):
     Microsimulation(dataset=CPS, year=year)
 
 
+# Temporarily removed
+
+
+"""
 @pytest.mark.dependency(depends=["dataset"])
 @pytest.mark.parametrize("year", ACS_YEARS)
 def test_acs_openfisca_us_compatible(year):
     from openfisca_us import Microsimulation
 
     Microsimulation(dataset=ACS, year=year)
+"""
 
 
 @pytest.mark.dependency(depends=["dataset"])

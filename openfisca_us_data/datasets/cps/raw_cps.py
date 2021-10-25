@@ -31,7 +31,9 @@ class RawCPS:
                 "Received a 404 response when fetching the data."
             )
         try:
-            with BytesIO() as file, pd.HDFStore(RawCPS.file(year)) as storage:
+            with BytesIO() as file, pd.HDFStore(
+                RawCPS.file(year), mode="w"
+            ) as storage:
                 content_length_actual = 0
                 for data in response.iter_content(int(1e6)):
                     progress_bar.update(len(data))
@@ -50,8 +52,9 @@ class RawCPS:
                 storage["tax_unit"] = create_tax_unit_table(person)
                 storage["spm_unit"] = create_SPM_unit_table(person)
         except Exception as e:
+            RawCPS.remove(year)
             raise ValueError(
-                f"Attempted to extract and save the CSV files, but encountered an error: {e.with_traceback()}"
+                f"Attempted to extract and save the CSV files, but encountered an error: {e}"
             )
 
 
