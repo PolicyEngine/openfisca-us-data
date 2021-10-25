@@ -22,13 +22,7 @@ setup(
         "requests",
     ],
     extras_require={
-        "dev": [
-            "autopep8",
-            "black",
-            "setuptools",
-            "wheel",
-            "openfisca-us"
-        ]
+        "dev": ["autopep8", "black", "setuptools", "wheel", "openfisca-us"]
     },
     entry_points={
         "console_scripts": ["openfisca-us-data=openfisca_us_data.cli:main"],
