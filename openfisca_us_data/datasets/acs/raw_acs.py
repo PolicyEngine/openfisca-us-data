@@ -12,7 +12,7 @@ class RawACS:
         url = f"https://www2.census.gov/programs-surveys/supplemental-poverty-measure/datasets/spm/spm_pu_{year}.dta"
         response = requests.get(url, stream=True)
         total_size_in_bytes = int(
-            response.headers.get("content-length", 900e6)
+            response.headers.get("content-length", 1.2e9)
         )
         progress_bar = tqdm(
             total=total_size_in_bytes,
@@ -42,8 +42,9 @@ class RawACS:
                 storage["spm_unit"] = create_SPM_unit_table(person)
                 storage["household"] = create_household_table(person)
         except Exception as e:
+            RawACS.remove(year)
             raise ValueError(
-                f"Attempted to extract and save the CSV files, but encountered an error: {e.with_traceback()}"
+                f"Attempted to extract and save the CSV files, but encountered an error: {e}"
             )
 
 
