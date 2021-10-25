@@ -9,7 +9,7 @@ class RawACS:
     name = "raw_acs"
 
     def generate(year: int) -> None:
-        url = f"https://www2.census.gov/programs-surveys/supplemental-poverty-measure/datasets/spm/spm_pu_{year}.sas7bdat"
+        url = f"https://www2.census.gov/programs-surveys/supplemental-poverty-measure/datasets/spm/spm_pu_{year}.dta"
         response = requests.get(url, stream=True)
         total_size_in_bytes = int(
             response.headers.get("content-length", 900e6)
@@ -36,7 +36,7 @@ class RawACS:
                 )
                 progress_bar.total = content_length_actual
                 progress_bar.close()
-                person = pd.read_sas(file, format="sas7bdat").fillna(0)
+                person = pd.read_stata(file).fillna(0)
                 person.columns = person.columns.str.upper()
                 storage["person"] = person
                 storage["spm_unit"] = create_SPM_unit_table(person)
