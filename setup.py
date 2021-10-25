@@ -19,6 +19,7 @@ setup(
         "synthimpute",
         "pytest",
         "pytest-dependency",
+        "requests",
     ],
     extras_require={
         "dev": [
