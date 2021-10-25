@@ -1,5 +1,4 @@
 from openfisca_us_data import CPS, ACS, REPO
-from openfisca_us import Microsimulation
 import pytest
 import yaml
 import pandas as pd

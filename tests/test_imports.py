@@ -1,6 +1,3 @@
-import pytest
-
-
 def test_import():
     import openfisca_us_data
 
