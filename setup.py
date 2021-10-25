@@ -25,6 +25,8 @@ setup(
         "dev": [
             "autopep8",
             "black",
+            "setuptools",
+            "wheel",
         ]
     },
     entry_points={
