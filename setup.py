@@ -27,6 +27,7 @@ setup(
             "black",
             "setuptools",
             "wheel",
+            "openfisca-us"
         ]
     },
     entry_points={
