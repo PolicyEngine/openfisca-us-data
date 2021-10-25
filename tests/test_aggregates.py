@@ -3,6 +3,7 @@ import pytest
 import yaml
 import pandas as pd
 from itertools import product
+from openfisca_us import Microsimulation
 
 # Tolerance when comparing totals against taxcalc.
 # We don't expect these to match since taxcalc uses its own weights.
@@ -28,35 +29,22 @@ def test_CPS_dataset_generates(year):
     CPS.generate(year)
 
 
-# Temporarily removed
-
-"""
 @pytest.mark.dependency(name="dataset")
 @pytest.mark.parametrize("year", ACS_YEARS)
 def test_ACS_dataset_generates(year):
     ACS.generate(year)
-"""
 
 
 @pytest.mark.dependency(depends=["dataset"])
 @pytest.mark.parametrize("year", CPS_YEARS)
 def test_cps_openfisca_us_compatible(year):
-    from openfisca_us import Microsimulation
-
     Microsimulation(dataset=CPS, year=year)
 
 
-# Temporarily removed
-
-
-"""
 @pytest.mark.dependency(depends=["dataset"])
 @pytest.mark.parametrize("year", ACS_YEARS)
 def test_acs_openfisca_us_compatible(year):
-    from openfisca_us import Microsimulation
-
     Microsimulation(dataset=ACS, year=year)
-"""
 
 
 @pytest.mark.dependency(depends=["dataset"])

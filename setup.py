@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="openfisca-us-data",
-    version="0.1.2",
+    version="0.1.3",
     description=(
         "A Python package to manage OpenFisca-US-compatible microdata"
     ),
@@ -22,12 +22,7 @@ setup(
         "requests",
     ],
     extras_require={
-        "dev": [
-            "autopep8",
-            "black",
-            "setuptools",
-            "wheel",
-        ]
+        "dev": ["autopep8", "black", "setuptools", "wheel", "openfisca-us"]
     },
     entry_points={
         "console_scripts": ["openfisca-us-data=openfisca_us_data.cli:main"],
