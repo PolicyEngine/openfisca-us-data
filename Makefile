@@ -2,7 +2,6 @@ format:
 	autopep8 . -r -i
 	black . -l 79
 test:
-	pytest tests -vv
+	pytest tests/test_imports.py -vv
 install:
-	pip install git+https://github.com/PolicyEngine/openfisca-us
-	pip install -e .
+	pip install -e .[dev]
