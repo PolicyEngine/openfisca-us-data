@@ -9,7 +9,7 @@ class RawACS:
     name = "raw_acs"
 
     def generate(year: int) -> None:
-        url = f"https://www2.census.gov/programs-surveys/supplemental-poverty-measure/datasets/spm/spm_pu_{year}.dta"
+        url = f"https://www2.census.gov/programs-surveys/supplemental-poverty-measure/datasets/spm/spm_{year}_pu.dta"
         response = requests.get(url, stream=True)
         total_size_in_bytes = int(
             response.headers.get("content-length", 1.2e9)
