@@ -10,33 +10,9 @@ class RawACS:
 
     def generate(year: int) -> None:
         url = f"https://www2.census.gov/programs-surveys/supplemental-poverty-measure/datasets/spm/spm_{year}_pu.dta"
-        response = requests.get(url, stream=True)
-        total_size_in_bytes = int(
-            response.headers.get("content-length", 1.2e9)
-        )
-        progress_bar = tqdm(
-            total=total_size_in_bytes,
-            unit="iB",
-            unit_scale=True,
-            desc="Downloading ACS SPM research file",
-        )
-        if response.status_code == 404:
-            raise FileNotFoundError(
-                "Received a 404 response when fetching the data."
-            )
         try:
-            with BytesIO() as file, pd.HDFStore(RawACS.file(year)) as storage:
-                content_length_actual = 0
-                for data in response.iter_content(int(1e6)):
-                    progress_bar.update(len(data))
-                    content_length_actual += len(data)
-                    file.write(data)
-                progress_bar.set_description(
-                    "Downloaded ACS SPM research file"
-                )
-                progress_bar.total = content_length_actual
-                progress_bar.close()
-                person = pd.read_stata(file).fillna(0)
+            with pd.HDFStore(RawACS.file(year)) as storage:
+                person = pd.read_stata(url).fillna(0)
                 person.columns = person.columns.str.upper()
                 storage["person"] = person
                 storage["spm_unit"] = create_SPM_unit_table(person)
