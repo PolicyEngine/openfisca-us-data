@@ -1,6 +1,5 @@
 from pathlib import Path
 import shutil
-from openfisca_core.model_api import *
 from pathlib import Path
 import shutil
 import pandas as pd
