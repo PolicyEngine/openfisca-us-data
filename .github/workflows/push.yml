@@ -25,7 +25,7 @@ jobs:
         run: make install
       - name: Run tests
         run: make test
-  Publish to PyPI:
+  Publish:
     if: github.repository == 'PolicyEngine/openfisca-us-data'
     runs-on: ubuntu-latest
     steps:

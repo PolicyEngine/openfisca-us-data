@@ -16,7 +16,7 @@ setup(
         "tqdm",
         "tables",
         "h5py",
-        "synthimpute @ git+https://github.com/PSLmodels/synthimpute",
+        "synthimpute",
         "pytest",
         "pytest-dependency",
     ],
