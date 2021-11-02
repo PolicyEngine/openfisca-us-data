@@ -1,5 +1,5 @@
 from openfisca_us_data.utils import US, dataset
-from openfisca_us_data.datasets.acs.raw_acs import RawACS
+from openfisca_us_data.datasets.acs.raw_spm_acs import RawSPMACS
 from pandas import DataFrame
 import h5py
 
@@ -19,10 +19,10 @@ class ACS:
 
         # Prepare raw ACS tables
         year = int(year)
-        if year not in RawACS.years:
-            RawACS.generate(year)
+        if year not in RawSPMACS.years:
+            RawSPMACS.generate(year)
 
-        raw_data = RawACS.load(year)
+        raw_data = RawSPMACS.load(year)
         acs = h5py.File(ACS.file(year), mode="w")
 
         person, spm_unit, household = [
