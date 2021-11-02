@@ -13,6 +13,9 @@ def test_CPS_import():
 def test_RawACS_import():
     from openfisca_us_data import RawACS
 
+def test_RawSPMACS_import():
+    from openfisca_us_data import RawSPMACS
+
 
 def test_ACS_import():
     from openfisca_us_data import ACS

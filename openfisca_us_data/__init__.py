@@ -3,4 +3,4 @@ from pathlib import Path
 
 REPO = Path(__file__).parent
 
-DATASETS = (RawCPS, CPS, RawACS, ACS)
+DATASETS = (RawCPS, CPS, RawACS, ACS, RawSPMACS)

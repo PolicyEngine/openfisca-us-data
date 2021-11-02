@@ -45,9 +45,12 @@ class CustomDataset:
 ### CPS
 - OpenFisca-US-compatible
 - Contains OpenFisca-US-compatible input arrays.
-### RawACS
+### RawSPMACS
 - Not OpenFisca-US-compatible
 - Contains the tables from the raw [ACS SPM research file](https://www.census.gov/data/datasets/time-series/demo/supplemental-poverty-measure/acs-research-files.html) microdata.
+### RawACS
+- Not OpenFisca-US-compatible
+- Contains the tables from the raw [ACS person and household file](https://www.census.gov/programs-surveys/acs/microdata.html)
 ### ACS
 - OpenFisca-US-compatible
-- Contains OpenFisca-US-compatible input arrays.
+- Contains OpenFisca-US-compatible input arrays from the spm research file.

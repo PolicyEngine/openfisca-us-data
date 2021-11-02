@@ -5,20 +5,20 @@ import pandas as pd
 
 
 @dataset
-class RawACS:
-    name = "raw_acs"
+class RawSPMACS:
+    name = "raw_spm_acs"
 
     def generate(year: int) -> None:
         url = f"https://www2.census.gov/programs-surveys/supplemental-poverty-measure/datasets/spm/spm_{year}_pu.dta"
         try:
-            with pd.HDFStore(RawACS.file(year)) as storage:
+            with pd.HDFStore(RawSPMACS.file(year)) as storage:
                 person = pd.read_stata(url).fillna(0)
                 person.columns = person.columns.str.upper()
                 storage["person"] = person
                 storage["spm_unit"] = create_SPM_unit_table(person)
                 storage["household"] = create_household_table(person)
         except Exception as e:
-            RawACS.remove(year)
+            RawSPMACS.remove(year)
             raise ValueError(
                 f"Attempted to extract and save the CSV files, but encountered an error: {e}"
             )
