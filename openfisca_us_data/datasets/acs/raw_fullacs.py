@@ -31,8 +31,6 @@ class RawfullACS:
                 household_df = pd.concat(householda, householdb).fillna(0)
                 household_df.columns = household_df.columns.str.upper()
 
-
-
         except Exception as e:
             RawfullACS.remove(year)
             raise ValueError(
