@@ -14,7 +14,7 @@ class RawACS:
         file = ZipFile(BytesIO(request.content))
         file.extractall(f'{year}_pus')
 
-        url2 = 'https://www2.census.gov/programs-surveys/acs/data/pums/{year}/1-Year/csv_hus.zip'
+        url2 = f'https://www2.census.gov/programs-surveys/acs/data/pums/{year}/1-Year/csv_hus.zip'
         request = requests.get(url2)
         file = ZipFile(BytesIO(request.content))
         file.extractall(f'{year}_hus')
