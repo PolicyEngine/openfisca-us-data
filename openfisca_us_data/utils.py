@@ -1,4 +1,3 @@
-from pathlib import Path
 import shutil
 from pathlib import Path
 import shutil
@@ -14,6 +13,7 @@ US = "openfisca_us"
 
 
 class classproperty(object):
+    """Create a @classproperty decorator as explained in SO Post 5189699"""
     def __init__(self, f):
         self.f = f
 
@@ -22,6 +22,22 @@ class classproperty(object):
 
 
 def dataset(cls):
+    """Decorator function adding functionality to raw data source classes
+    
+    Args:
+        cls (a Python class): A python class that has the generate() function
+        implemented
+
+    This function is used on a raw data source class:
+       
+        newClass = dataset(RawClass)
+
+    or, equivalently
+
+    @dataset
+    class RawClass:
+        ...
+    """
     def generate():
         raise NotImplementedError("No dataset generation function specified")
 
