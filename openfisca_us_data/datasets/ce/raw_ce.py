@@ -9,10 +9,11 @@ from openfisca_us_data.utils import *
 
 @dataset
 class RawCE:
-    """Raw data extractor class for the CE survey extended by dataset(cls)"""
+    """Raw data extractor class for the Consumer Expenditure Survey"""
     name = "raw_ce"
 
     def generate(year: int, revised_q1=True) -> None:
+        """Save the Raw Consumer Expendure data in HDF5 format via PyTables"""
         file_year_code = str(year)[-2:]
         file_year_after_code = str(year + 1)[-2:]
         url = f"https://www.bls.gov/cex/pumd/data/comma/intrvw{file_year_code}.zip"
@@ -55,7 +56,6 @@ class RawCE:
                     f"fmli{file_year_after_code}1"
                 ]
 
-                df_list = []
                 for quarter in range(1, 6):
                     filename = quarter_filenames[quarter - 1]
                     with zipfile.open(f"{dirstring}/{filename}.csv") as f:
@@ -74,15 +74,8 @@ class RawCE:
                         )
                         q_df.insert(4, 'interview_mo', q_df['QINTRVMO'])
                         q_df.insert(5, 'interview_yr', q_df['QINTRVYR'])
-                        q_df.insert(6, 'weight', q_df['FINLWT21'])                        
+                        q_df.insert(6, 'weight', q_df['FINLWT21'])
                         storage[filename] = q_df
-
-            data_dictionary_url = (
-    "https://www.bls.gov/cex/pumd/ce_pumd_interview_diary_dictionary.xlsx"
-            )
-            print(
-                f"\nGet the CE data dictionary at {data_dictionary_url}"
-	    )
 
         except Exception as e:
             RawCE.remove(year)
@@ -93,8 +86,10 @@ class RawCE:
 
 
 def get_unit_id(newid):
+    """Extract the Consumer Unit from the NewId"""
     return int(str(newid)[:-1])
 
 
 def get_interview_id(newid):
+    """Extract the Interview Id from the NewId"""
     return int(str(newid)[-1])

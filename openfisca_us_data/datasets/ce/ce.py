@@ -1,7 +1,7 @@
 import numpy as np
 
 import h5py
-from pandas import DataFrame, Series
+from pandas import DataFrame, concat
 
 from openfisca_us_data.utils import US, dataset
 from openfisca_us_data.datasets.ce.raw_ce import RawCE
@@ -16,14 +16,14 @@ class CE:
     proportion_cash_contrib_to_charity = 396.59 / 2080.85
 
     def generate(year: int) -> None:
-        """Generates the CE dataset from the FMLI "interview" files"
+        """Saves organized Consumer Expenditure data in HDF5 format via h5py
 
         Computes "months in scope" from existing variables, and uses it to
-        adjust weights and compute annual estimates. Also uses those estimates
-        to compute carbon emissions.
- 
+        adjust weights and compute annual estimates. Finally, those estimates
+        to compute estimated carbon emissions per household.
+
         Args:
-            year (int): The year of the raw CPS to use.
+            year (int): The year of the Consumer Expenditure to use.
         """
         year = int(year)
         if year not in RawCE.years:
@@ -31,24 +31,24 @@ class CE:
 
         raw_data = RawCE.load(year)
         ce = h5py.File(CE.file(year), mode="w")
-        ce.create_group("/household") # Household quarterly data
-        ce.create_group("/annual") # Annual estimates
+        ce.create_group("/household")  # Household quarterly data
+        ce.create_group("/annual")  # Annual estimates
 
         # Concatenate 5 "quarters" of fmli data, add months in scope ----------
         df_list = []
         for quarter_data in raw_data.keys():
             df_list.append(raw_data[quarter_data])
 
-        fmli_df = pd.concat(df_list)
-        months_in_scope = fmli_df.apply(
+        fmli_df = concat(df_list)
+        mis = fmli_df.apply(
             lambda row: months_in_scope(row['interview_mo'],
                                         row['nominal_quarter']), axis=1
         )
-        fmli_df.insert(7, 'months_in_scope', months_in_scope)
+        fmli_df.insert(7, 'months_in_scope', mis)
         fmli_df = fmli_df.sort_values(['cu_id', 'interview_id'])
 
-        # Add household variables to H5 File ---------------------------------- 
-        add_survey_vars(ce, fmli_df)        
+        # Add household variables to H5 File ----------------------------------
+        add_survey_vars(ce, fmli_df)
         add_demographics(ce, fmli_df)
         add_expenditures(ce, fmli_df)
         add_carbon_emissions(ce)
@@ -58,39 +58,56 @@ class CE:
             ce,
             "/household/demographics/income_before_tax",
             "demographics"
-        ) 
+        )
         estimate_annual_quantity(ce, "/household/expenditures/alcohol")
         estimate_annual_quantity(ce, "/household/emissions/co2_kg")
         raw_data.close()
         ce.close()
 
 
-def months_in_scope(interview_mo, quarter):
-    """quarter is nominal quarter"""
+def months_in_scope(interview_mo: int, nominal_quarter: int):
+    """Get the number of calendar months representing a nominal quarter
+    
+    Args:
+        interview_mo (int): the calendar month (e.g., 2 for February) that
+            the Consumer Expenditure survey was taken
+        nominal_quarter (int): The CE quarter of 1-5, with 5 representing the
+            first quarter of the next year.
+
+    Returns:
+        months_in_scope (int): the number of calendar months (out of a
+            possible 3) that will represent the nominal quarter
+    """
     months_in_scope = np.nan
-    if quarter in [1, 2, 3, 4]:
+    if nominal_quarter in [1, 2, 3, 4]:
         if interview_mo in [1, 2, 3]:
             months_in_scope = interview_mo - 1
         elif interview_mo in [4, 5, 6, 7, 8, 9, 10, 11, 12]:
             months_in_scope = 3
         else:
             raise ValueError(f"interview_mo {interview_mo} outside of range")
-    elif quarter == 5:
+    elif nominal_quarter == 5:
         if interview_mo in [1, 2, 3]:
             months_in_scope = 4 - interview_mo
         else:
             raise ValueError(f"interview_mo {interview_mo} outside of range")
     else:
-        raise ValueError(f"quarter {quarter} outside of range")
+        raise ValueError(f"nominal quarter {nominal_quarter} outside of range")
     return months_in_scope
 
 
 def estimate_annual_quantity(ce: h5py.File, var_path: str, var_type="expense"):
-    """
-        Note that proportion_in_scope < 1 will scale up number
-        some proportion_in_scope vals are 0 so 1/x is problematic
+    """Estimate an annual quantity using CE survey weights
 
-        Annualize mean quarterly estimate
+    When the var_type is "expense", months in scope of less than 3 will
+        lead to proportionally scaled up values. Results are saved in
+        "/annual." 
+    
+    Args:
+        ce (h5py.File): The HDF5 data structure containing the organized
+           Consumer Expenditure survey data
+        var_path (str): the path within ce contining the survey variable
+        var_type (str): either "expense" or "demographic"
     """
     if len(set(ce["/household/survey/nominal_year"][:])) > 1:
         raise NotImplementedError("Multi-year estimation not yet supported")
@@ -128,7 +145,14 @@ def estimate_annual_quantity(ce: h5py.File, var_path: str, var_type="expense"):
     ce["/annual/" + estimated_name] = result
 
 
-def add_survey_vars(ce: h5py.File, fmli_df: pd.DataFrame):
+def add_survey_vars(ce: h5py.File, fmli_df: DataFrame):
+    """Add Consumer Expenditure variables related to the survey itself
+
+    Args:
+        ce (h5py.File): The HDF5 data structure containing the organized
+           Consumer Expenditure survey data
+        fmli_df (pd.DataFrame): The raw CE data (all 5 quarters)
+    """
     group_prefix = "/household/survey/"
     ce[group_prefix + "weight"] = fmli_df["weight"]
     ce[group_prefix + "months_in_scope"] = fmli_df["months_in_scope"]
@@ -138,9 +162,15 @@ def add_survey_vars(ce: h5py.File, fmli_df: pd.DataFrame):
     ce[group_prefix + "interview_month"] = fmli_df["interview_mo"]
     ce[group_prefix + "survey_weight"] = fmli_df["FINLWT21"]
 
- 
-def add_demographics(ce: h5py.File, fmli_df: pd.DataFrame):
-  
+
+def add_demographics(ce: h5py.File, fmli_df: DataFrame):
+    """Add select Consumer Expenditure demographic variables
+
+    Args:
+        ce (h5py.File): The HDF5 data structure containing the organized
+           Consumer Expenditure survey data
+        fmli_df (pd.DataFrame): The raw CE data (all 5 quarters)
+    """
     group_prefix = "/household/demographics/"
     ce[group_prefix + "ref_age"] = fmli_df["AGE_REF"]
     ce[group_prefix + "ref_race"] = fmli_df["REF_RACE"]
@@ -156,17 +186,23 @@ def add_demographics(ce: h5py.File, fmli_df: pd.DataFrame):
     ce[group_prefix + "members_older_than_64_ct"] = fmli_df["PERSOT64"]
 
 
-def add_expenditures(ce: h5py.File, fmli_df: pd.DataFrame):
-  
-    group_prefix = "/household/expenditures/"     
+def add_expenditures(ce: h5py.File, fmli_df: DataFrame):
+    """Add select Consumer Expenditure expenditure variables
+
+    Args:
+        ce (h5py.File): The HDF5 data structure containing the organized
+           Consumer Expenditure survey data
+        fmli_df (pd.DataFrame): The raw CE data (all 5 quarters)
+    """
+    group_prefix = "/household/expenditures/"
     ce[group_prefix + "airfare"] = fmli_df["TAIRFARP"]
     ce[group_prefix + "alcohol"] = fmli_df["ALCBEVPQ"]
     ce[group_prefix + "education"] = fmli_df["EDUCAPQ"]
     ce[group_prefix + "auto_insurance"] = fmli_df["VEHINSPQ"]
     ce[group_prefix + "autos"] = (
-      fmli_df["CARTKUPQ"] # used car
-      + fmli_df["CARTKNPQ"] # new car
-      + fmli_df["VRNTLOPQ"] # rent/lease
+      fmli_df["CARTKUPQ"]  # used car
+      + fmli_df["CARTKNPQ"]  # new car
+      + fmli_df["VRNTLOPQ"]  # rent/lease
     )
     ce[group_prefix + "books"] = fmli_df["READPQ"]
     ce[group_prefix + "charity"] = (
@@ -177,7 +213,7 @@ def add_expenditures(ce: h5py.File, fmli_df: pd.DataFrame):
     ce[group_prefix + "food_at_home"] = fmli_df["FDHOMEPQ"]
     ce[group_prefix + "food_at_restaurants"] = fmli_df["FDAWAYPQ"]
     ce[group_prefix + "furnishings"] = fmli_df["FURNTRPQ"]
-    ce[group_prefix + "gasoline"] = fmli_df["GASMOPQ"] # Inc motor oil
+    ce[group_prefix + "gasoline"] = fmli_df["GASMOPQ"]  # Inc motor oil
     ce[group_prefix + "health"] = fmli_df["HEALTHPQ"]
     # Using "fuel oil" but another category includes "other fuels"
     ce[group_prefix + "home_heating_fuel"] = fmli_df["FULOILPQ"]
@@ -202,7 +238,20 @@ def add_expenditures(ce: h5py.File, fmli_df: pd.DataFrame):
 
 
 def add_carbon_emissions(ce: h5py.File):
+    """Add Carbon Emissions from Fremstad & Paul (2019)'s "extraction method"
 
+    The paper is: Fremstad, Anders, and Mark Paul.
+        "The impact of a carbon tax on inequality."
+        Ecological Economics 163 (2019): 88-97.
+
+    The table of coefficients is published in supplementary materials:
+    docs.google.com/document/d/1jQlG1uz1UAPy6O_fmxyLQxRKLRDRpp5qmYdXKPXXXmM
+
+    Args:
+        ce (h5py.File): The HDF5 data structure containing the organized
+           Consumer Expenditure survey data
+        fmli_df (pd.DataFrame): The raw CE data (all 5 quarters)
+    """
     group_prefix = "/household/expenditures/"
     ce["/household/emissions/co2_kg"] = (
         1.0 * ce[group_prefix + "airfare"][:]
