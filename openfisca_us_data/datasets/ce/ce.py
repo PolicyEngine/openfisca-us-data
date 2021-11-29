@@ -41,11 +41,11 @@ class CE:
 
         fmli_df = concat(df_list)
         mis = fmli_df.apply(
-            lambda row: months_in_scope(row['interview_mo'],
-                                        row['nominal_quarter']), axis=1
+            lambda row: months_in_scope(row["interview_mo"], row["nominal_quarter"]),
+            axis=1,
         )
-        fmli_df.insert(7, 'months_in_scope', mis)
-        fmli_df = fmli_df.sort_values(['cu_id', 'interview_id'])
+        fmli_df.insert(7, "months_in_scope", mis)
+        fmli_df = fmli_df.sort_values(["cu_id", "interview_id"])
 
         # Add household variables to H5 File ----------------------------------
         add_survey_vars(ce, fmli_df)
@@ -55,9 +55,7 @@ class CE:
 
         # Add annual estimates to H5 File -------------------------------------
         estimate_annual_quantity(
-            ce,
-            "/household/demographics/income_before_tax",
-            "demographics"
+            ce, "/household/demographics/income_before_tax", "demographics"
         )
         estimate_annual_quantity(ce, "/household/expenditures/alcohol")
         estimate_annual_quantity(ce, "/household/emissions/co2_kg")
@@ -67,7 +65,7 @@ class CE:
 
 def months_in_scope(interview_mo: int, nominal_quarter: int):
     """Get the number of calendar months representing a nominal quarter
-    
+
     Args:
         interview_mo (int): the calendar month (e.g., 2 for February) that
             the Consumer Expenditure survey was taken
@@ -101,8 +99,8 @@ def estimate_annual_quantity(ce: h5py.File, var_path: str, var_type="expense"):
 
     When the var_type is "expense", months in scope of less than 3 will
         lead to proportionally scaled up values. Results are saved in
-        "/annual." 
-    
+        "/annual."
+
     Args:
         ce (h5py.File): The HDF5 data structure containing the organized
            Consumer Expenditure survey data
@@ -117,12 +115,9 @@ def estimate_annual_quantity(ce: h5py.File, var_path: str, var_type="expense"):
     MONTHS_PER_QUARTER = 3
     nominal_quarter_ests = []
     for nominal_quarter in [1, 2, 3, 4, 5]:
-        in_quarter = (
-            ce["/household/survey/nominal_quarter"][:] == nominal_quarter
-        )
+        in_quarter = ce["/household/survey/nominal_quarter"][:] == nominal_quarter
         proportion_in_scope = (
-            ce["/household/survey/months_in_scope"][in_quarter]
-            / MONTHS_PER_QUARTER
+            ce["/household/survey/months_in_scope"][in_quarter] / MONTHS_PER_QUARTER
         )
         weight = ce["/household/survey/weight"][in_quarter]
         var = ce[var_path][in_quarter]
@@ -200,9 +195,9 @@ def add_expenditures(ce: h5py.File, fmli_df: DataFrame):
     ce[group_prefix + "education"] = fmli_df["EDUCAPQ"]
     ce[group_prefix + "auto_insurance"] = fmli_df["VEHINSPQ"]
     ce[group_prefix + "autos"] = (
-      fmli_df["CARTKUPQ"]  # used car
-      + fmli_df["CARTKNPQ"]  # new car
-      + fmli_df["VRNTLOPQ"]  # rent/lease
+        fmli_df["CARTKUPQ"]  # used car
+        + fmli_df["CARTKNPQ"]  # new car
+        + fmli_df["VRNTLOPQ"]  # rent/lease
     )
     ce[group_prefix + "books"] = fmli_df["READPQ"]
     ce[group_prefix + "charity"] = (
@@ -255,30 +250,30 @@ def add_carbon_emissions(ce: h5py.File):
     group_prefix = "/household/expenditures/"
     ce["/household/emissions/co2_kg"] = (
         1.0 * ce[group_prefix + "airfare"][:]
-        + .33 * ce[group_prefix + "alcohol"][:]
-        + .24 * ce[group_prefix + "education"][:]
-        + .05 * ce[group_prefix + "auto_insurance"][:]
-        + .73 * ce[group_prefix + "autos"][:]
-        + .22 * ce[group_prefix + "books"][:]
-        + .19 * ce[group_prefix + "charity"][:]
-        + .22 * ce[group_prefix + "clothes"][:]
+        + 0.33 * ce[group_prefix + "alcohol"][:]
+        + 0.24 * ce[group_prefix + "education"][:]
+        + 0.05 * ce[group_prefix + "auto_insurance"][:]
+        + 0.73 * ce[group_prefix + "autos"][:]
+        + 0.22 * ce[group_prefix + "books"][:]
+        + 0.19 * ce[group_prefix + "charity"][:]
+        + 0.22 * ce[group_prefix + "clothes"][:]
         + 2.24 * ce[group_prefix + "electricity"][:]
-        + .39 * ce[group_prefix + "food_at_home"][:]
-        + .24 * ce[group_prefix + "food_at_restaurants"][:]
-        + .71 * ce[group_prefix + "furnishings"][:]
+        + 0.39 * ce[group_prefix + "food_at_home"][:]
+        + 0.24 * ce[group_prefix + "food_at_restaurants"][:]
+        + 0.71 * ce[group_prefix + "furnishings"][:]
         + 3.22 * ce[group_prefix + "gasoline"][:]
-        + .22 * ce[group_prefix + "health"][:]
+        + 0.22 * ce[group_prefix + "health"][:]
         + 2.75 * ce[group_prefix + "home_heating_fuel"][:]
-        + .36 * ce[group_prefix + "household_supplies"][:]
-        + .05 * ce[group_prefix + "life_insurance"][:]
-        + .94 * ce[group_prefix + "mass_transit"][:]
+        + 0.36 * ce[group_prefix + "household_supplies"][:]
+        + 0.05 * ce[group_prefix + "life_insurance"][:]
+        + 0.94 * ce[group_prefix + "mass_transit"][:]
         + 1.82 * ce[group_prefix + "natural_gas"][:]
-        + .23 * ce[group_prefix + "other_car_services"][:]
-        + .06 * ce[group_prefix + "other_dwelling_rentals"][:]
-        + .25 * ce[group_prefix + "other_recreation"][:]
-        + .7 * ce[group_prefix + "recreation_and_sports"][:]
-        + .18 * ce[group_prefix + "telephone"][:]
-        + .05 * ce[group_prefix + "tentant_occupied_dwellings"][:]
-        + .36 * ce[group_prefix + "tobacco"][:]
-        + .38 * ce[group_prefix + "water"][:]
+        + 0.23 * ce[group_prefix + "other_car_services"][:]
+        + 0.06 * ce[group_prefix + "other_dwelling_rentals"][:]
+        + 0.25 * ce[group_prefix + "other_recreation"][:]
+        + 0.7 * ce[group_prefix + "recreation_and_sports"][:]
+        + 0.18 * ce[group_prefix + "telephone"][:]
+        + 0.05 * ce[group_prefix + "tentant_occupied_dwellings"][:]
+        + 0.36 * ce[group_prefix + "tobacco"][:]
+        + 0.38 * ce[group_prefix + "water"][:]
     )
