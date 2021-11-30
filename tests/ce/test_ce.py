@@ -1,14 +1,6 @@
 from openfisca_us_data import CE
 
 
-# 2019 Constants -------------------------------------------------------------
-HHS_IN_US = 122.8e6
-KG_PER_METRIC_TON = 1000
-INCOME_BEFORE_TAX_2019_PRECOMPUTED = 82743
-ALCOHOL_2019_PRECOMPUTED = 536
-HH_CO2_EMISSIONS_2019_PRECOMPUTED = 26903
-
-
 def test_ce_from_2019():
     """Test the Consumer Expenditure data generating functions for 2019
 
@@ -20,6 +12,12 @@ def test_ce_from_2019():
     limitations. These were considered sufficiently close for the purposes
     of simulation.
     """
+    # 2019 Constants -------------------------------------------------------------
+    HHS_IN_US = 122.8e6
+    KG_PER_METRIC_TON = 1000
+    INCOME_BEFORE_TAX_2019_PRECOMPUTED = 82743
+    ALCOHOL_2019_PRECOMPUTED = 536
+    HH_CO2_EMISSIONS_2019_PRECOMPUTED = 26903
 
     CE.generate(2019)
     ce_2019 = CE.load(2019)

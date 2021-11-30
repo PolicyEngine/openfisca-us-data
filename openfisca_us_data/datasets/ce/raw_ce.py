@@ -66,12 +66,14 @@ class RawCE:
                         q_df.insert(
                             2,
                             "cu_id",
-                            q_df["NEWID"].apply(lambda x: get_unit_id(x)),
+                            # Consumer Unit ID is all but the final digit of NEWID.
+                            q_df.NEWID.astype(str).str[:-1].astype(int),
                         )
                         q_df.insert(
                             3,
                             "interview_id",
-                            q_df["NEWID"].apply(lambda x: get_interview_id(x)),
+                            # Interview ID is the final digit of NEWID.
+                            q_df.NEWID.astype(str).str[-1].astype(int),
                         )
                         q_df.insert(4, "interview_mo", q_df["QINTRVMO"])
                         q_df.insert(5, "interview_yr", q_df["QINTRVYR"])
@@ -84,13 +86,3 @@ class RawCE:
                 "Attempted to extract and save the CSV files, "
                 + f"but encountered an error: {e}"
             )
-
-
-def get_unit_id(newid):
-    """Extract the Consumer Unit from the NewId"""
-    return int(str(newid)[:-1])
-
-
-def get_interview_id(newid):
-    """Extract the Interview Id from the NewId"""
-    return int(str(newid)[-1])

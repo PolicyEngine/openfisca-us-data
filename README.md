@@ -76,7 +76,6 @@ from openfisca_us_data import ACS
 
 acs_hd5 = ACS.load(2016)
 ```
-
 The `CE` class, which loads Consumer Expenditure data, includes some scalar estimates
 of annual quantities.
 
