@@ -35,5 +35,5 @@ setup(
         "console_scripts": ["openfisca-us-data=openfisca_us_data.cli:main"],
     },
     include_package_data=True,
-    package_data={'': ['openfisca_us_data/datasets/ce/*.yaml']},
+    package_data={"": ["openfisca_us_data/datasets/ce/*.yaml"]},
 )
