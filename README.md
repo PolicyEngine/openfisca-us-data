@@ -35,8 +35,7 @@ openfisca-us-data cps generate 2019 cps.csv.gz
 ```python
 from openfisca_us_data import ACS
 
-my_acs = ACS()
-my_acs.generate(2016)  # Retrieves the data.
+ACS.generate(2016)  # Retrieves the data.
 ```
 
 After successful running of the command above, the data has been stored. The `data_dir` property
@@ -51,7 +50,7 @@ Note that it's 196 MB, so it contains some data. We can load that data (still in
 with the `load()` method.
 
 ```python
-acs_hd5 = my_acs.load(2016)
+acs_hd5 = ACS.load(2016)
 
 # h5py.File "acts like a Python dictionary" (https://docs.h5py.org/en/stable/quick.html)
 list(acs_hd5.keys())
@@ -75,8 +74,7 @@ Note that at this point, you may quit the session and restart, and the data will
 ```python
 from openfisca_us_data import ACS
 
-my_acs = ACS()
-acs_hd5 = my_acs.load(2016)
+acs_hd5 = ACS.load(2016)
 ```
 
 The `CE` class, which loads Consumer Expenditure data, includes some scalar estimates
@@ -85,10 +83,9 @@ of annual quantities.
 ```python
 from openfisca_us_data import CE
 
-my_ce = CE()
-my_ce.generate(2019)
+CE.generate(2019)
 
-ce_hd5 = my_ce.load(2019)
+ce_hd5 = CE.load(2019)
 
 ce_hd5["/annual/alcohol"]  # An HDF5 scalar
 ce_hd5["/annual/alcohol"][()]  # extracting the scalar value
