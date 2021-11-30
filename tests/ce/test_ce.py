@@ -22,7 +22,7 @@ def test_ce_from_2019():
     """
 
     CE.generate(2019)
-    ce_2019 = ce.load(2019)
+    ce_2019 = CE.load(2019)
 
     assert len(set(ce_2019.keys()).intersection({"annual", "household"})) == 2
 
