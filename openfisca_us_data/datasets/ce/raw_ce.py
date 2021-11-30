@@ -20,7 +20,9 @@ class RawCE:
         url = f"https://www.bls.gov/cex/pumd/data/comma/intrvw{file_year_code}.zip"
 
         response = requests.get(url, stream=True)
-        total_size_in_bytes = int(response.headers.get("content-length", 200e6))
+        total_size_in_bytes = int(
+            response.headers.get("content-length", 200e6)
+        )
         progress_bar = tqdm(
             total=total_size_in_bytes,
             unit="iB",
@@ -28,9 +30,13 @@ class RawCE:
             desc="Downloading CE Survey",
         )
         if response.status_code == 404:
-            raise FileNotFoundError("Received a 404 response when fetching the data.")
+            raise FileNotFoundError(
+                "Received a 404 response when fetching the data."
+            )
         try:
-            with BytesIO() as file, pd.HDFStore(RawCE.file(year), mode="w") as storage:
+            with BytesIO() as file, pd.HDFStore(
+                RawCE.file(year), mode="w"
+            ) as storage:
                 content_length_actual = 0
                 for data in response.iter_content(int(1e6)):
                     progress_bar.update(len(data))
@@ -58,7 +64,9 @@ class RawCE:
                         q_df.insert(0, "nominal_year", year)
                         q_df.insert(1, "nominal_quarter", quarter)
                         q_df.insert(
-                            2, "cu_id", q_df["NEWID"].apply(lambda x: get_unit_id(x))
+                            2,
+                            "cu_id",
+                            q_df["NEWID"].apply(lambda x: get_unit_id(x)),
                         )
                         q_df.insert(
                             3,

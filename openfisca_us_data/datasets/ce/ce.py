@@ -40,11 +40,12 @@ class CE:
             df_list.append(raw_data[quarter_data])
 
         fmli_df = concat(df_list)
-        mis = fmli_df.apply(
-            lambda row: months_in_scope(row["interview_mo"], row["nominal_quarter"]),
+        fmli_df["months_in_scope"] = fmli_df.apply(
+            lambda row: months_in_scope(
+                row["interview_mo"], row["nominal_quarter"]
+            ),
             axis=1,
         )
-        fmli_df.insert(7, "months_in_scope", mis)
         fmli_df = fmli_df.sort_values(["cu_id", "interview_id"])
 
         # Add household variables to H5 File ----------------------------------
@@ -76,7 +77,6 @@ def months_in_scope(interview_mo: int, nominal_quarter: int):
         months_in_scope (int): the number of calendar months (out of a
             possible 3) that will represent the nominal quarter
     """
-    months_in_scope = np.nan
     if nominal_quarter in [1, 2, 3, 4]:
         if interview_mo in [1, 2, 3]:
             months_in_scope = interview_mo - 1
@@ -115,9 +115,12 @@ def estimate_annual_quantity(ce: h5py.File, var_path: str, var_type="expense"):
     MONTHS_PER_QUARTER = 3
     nominal_quarter_ests = []
     for nominal_quarter in [1, 2, 3, 4, 5]:
-        in_quarter = ce["/household/survey/nominal_quarter"][:] == nominal_quarter
+        in_quarter = (
+            ce["/household/survey/nominal_quarter"][:] == nominal_quarter
+        )
         proportion_in_scope = (
-            ce["/household/survey/months_in_scope"][in_quarter] / MONTHS_PER_QUARTER
+            ce["/household/survey/months_in_scope"][in_quarter]
+            / MONTHS_PER_QUARTER
         )
         weight = ce["/household/survey/weight"][in_quarter]
         var = ce[var_path][in_quarter]

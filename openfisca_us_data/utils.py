@@ -26,7 +26,7 @@ def dataset(cls):
     """Decorator function adding functionality to raw data source classes
 
     Args:
-        cls (a Python class): A python class that has the generate() function
+        cls (a Python class): A Python class that has the generate() function
         implemented
 
     This function is used on a raw data source class:
@@ -55,7 +55,10 @@ def dataset(cls):
             map(
                 int,
                 pattern.findall(
-                    "\n" + "\n".join(map(lambda path: path.name, cl.data_dir.iterdir()))
+                    "\n"
+                    + "\n".join(
+                        map(lambda path: path.name, cl.data_dir.iterdir())
+                    )
                 ),
             )
         )
@@ -124,9 +127,13 @@ def dataset(cls):
     def save(data_file: str, year: int = 2018):
         if "https://" in data_file:
             response = requests.get(data_file, stream=True)
-            total_size_in_bytes = int(response.headers.get("content-length", 0))
+            total_size_in_bytes = int(
+                response.headers.get("content-length", 0)
+            )
             block_size = 1024  # 1 Kibibyte
-            progress_bar = tqdm(total=total_size_in_bytes, unit="iB", unit_scale=True)
+            progress_bar = tqdm(
+                total=total_size_in_bytes, unit="iB", unit_scale=True
+            )
             with open(cls.file(year), "wb") as file:
                 for data in response.iter_content(block_size):
                     progress_bar.update(len(data))

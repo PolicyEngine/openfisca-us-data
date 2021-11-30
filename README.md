@@ -2,7 +2,9 @@
 
 This package provides utilities for storing and retrieving various US microdata sources for usage
 in `openfisca-us`, with different configurations (e.g. imputations between surveys). All data is
-stored and loaded in HDF5 format.
+stored in the HDF5 "Hierarchical Data Format," though the "Raw" classes use PyTables and the
+final classes use h5py. See [Python and HDF5 - Fast Storage for Large Data](www.youtube.com/watch?v=hnhN2_TpY8g)
+for an introduction to both methods.
 
 ## Installation
 
@@ -30,44 +32,66 @@ openfisca-us-data cps generate 2019 cps.csv.gz
 ```
 
 ### Scripting
-```
+```python
+from openfisca_us_data import ACS
+
 my_acs = ACS()
-my_acs.generate(2016)  # retrieves the data
+my_acs.generate(2016)  # Retrieves the data.
 ```
 
 After successful running of the command above, the data has been stored. The `data_dir` property
 shows where:
-```
+```python
 my_acs.data_dir
-PosixPath('/mnt/c/devl/openfisca-us-data/openfisca_us_data/microdata/openfisca_us')
+# PosixPath('/mnt/c/devl/openfisca-us-data/openfisca_us_data/microdata/openfisca_us')
 ```
 
-If you look inside, there's a auto-generated README file and an `acs_2016.hf file.
+If you look inside, there's a auto-generated README file and an `acs_2016.h5` file.
 Note that it's 196 MB, so it contains some data. We can load that data (still in HDF5 format)
 with the `load()` method.
 
-```
+```python
 acs_hd5 = my_acs.load(2016)
 
 # h5py.File "acts like a Python dictionary" (https://docs.h5py.org/en/stable/quick.html)
-
 list(acs_hd5.keys())
 
 df1 = acs_hd5["SPM_unit_net_income"]
 df2 = acs_hd5["person_weight"]
 
-# Now we have an HDF5 dataset (These all appear to be vectors
+# "HDF5 dataset" objects are like NumPy arrays
 df1.shape
 df1[1:5]
+df2[:]
+
+# Or convert to Pandas DataFrame
+import pandas as pd
+import numpy as np
 
 pd.DataFrame(np.array(df1))
 ```
-Note that at this point, you may quit the session and restart, and the data will still be saved:
+Note that at this point, you may quit the session and restart, and the data will be saved and ready:
 
-```
+```python
+from openfisca_us_data import ACS
+
 my_acs = ACS()
 acs_hd5 = my_acs.load(2016)
+```
 
+The `CE` class, which loads Consumer Expenditure data, includes some scalar estimates
+of annual quantities.
+
+```python
+from openfisca_us_data import CE
+
+my_ce = CE()
+my_ce.generate(2019)
+
+ce_hd5 = my_ce.load(2019)
+
+ce_hd5["/annual/alcohol"]  # An HDF5 scalar
+ce_hd5["/annual/alcohol"][()]  # extracting the scalar value
 ```
 
 ## The `dataset` class decorator
