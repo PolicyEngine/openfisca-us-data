@@ -12,16 +12,20 @@ def test_ce_from_2019():
     limitations. These were considered sufficiently close for the purposes
     of simulation.
     """
-    # 2019 Constants -------------------------------------------------------------
-    HHS_IN_US = 122.8e6
-    KG_PER_METRIC_TON = 1000
+    # 2019 Constants, calculated from the CE ---------------------------------
     INCOME_BEFORE_TAX_2019_PRECOMPUTED = 82743
     ALCOHOL_2019_PRECOMPUTED = 536
-    HH_CO2_EMISSIONS_2019_PRECOMPUTED = 26903
+    CU_CO2_EMISSIONS_2019_PRECOMPUTED = 26903
 
+    # Emissions constants ----------------------------------------------------
+    HHS_IN_US_2019 = 122.8e6  # Source: 2019 ACS, presented by Google Search
+    KG_PER_METRIC_TON = 1000
+
+    # Generate and load the CE data ------------------------------------------
     CE.generate(2019)
     ce_2019 = CE.load(2019)
 
+    # Test top level of HDF5 hierarchy ---------------------------------------
     assert len(set(ce_2019.keys()).intersection({"annual", "household"})) == 2
 
     # Test household average demographic estimate ----------------------------
@@ -33,8 +37,10 @@ def test_ce_from_2019():
     assert round(est_alcohol_expense) == ALCOHOL_2019_PRECOMPUTED
 
     # Test Household Sector CO2 emissions are "in the ballpark" --------------
-    est_co2_kg_per_hh = ce_2019["/annual/co2_kg"][()]
-    est_total_tons_co2 = est_co2_kg_per_hh * HHS_IN_US / KG_PER_METRIC_TON
+    est_co2_kg_per_cu = ce_2019["/annual/co2_kg"][()]
+    est_total_tons_co2 = (
+        est_co2_kg_per_cu * HHS_IN_US_2019 / KG_PER_METRIC_TON
+    )
     assert round(est_total_tons_co2 / 1e9) > 2
     assert round(est_total_tons_co2 / 1e9) < 6
 
@@ -43,4 +49,4 @@ def test_ce_from_2019():
     assert len(set(ce_2019["/household"].keys()).intersection(hh_keys)) == 4
 
     hh_co2_emissions = ce_2019["/household/emissions/co2_kg"][:]
-    assert len(hh_co2_emissions) == HH_CO2_EMISSIONS_2019_PRECOMPUTED
+    assert len(hh_co2_emissions) == CU_CO2_EMISSIONS_2019_PRECOMPUTED

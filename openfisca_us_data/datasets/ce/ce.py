@@ -19,7 +19,7 @@ class CE:
     quarterly household level (technically "consumer unit") data deemed most
     appropriate for this project's needs. Only one set of files from the
     Interview Survey, called "FMLI" is used, and contains quarterly
-    expenditures, annual income, assets, and liablities, and household
+    expenditures, annual income, assets, and liabilities, and household
     characteristics and survey weights.
     """
 
@@ -31,7 +31,7 @@ class CE:
     #     pretax income, Consumer Expenditure Surveys, 2016.
     MEAN_CASH_CONTRIB_OUTSIDE_HOUSEHOLD_2016 = 2080.85
     MEAN_CASH_CONTRIB_TO_CHARITIES_2016 = 396.59
-    PROPORTION_CASH_CONTRIB_TO_CHARITY = (
+    proportion_cash_contrib_to_charity = (
         MEAN_CASH_CONTRIB_TO_CHARITIES_2016
         / MEAN_CASH_CONTRIB_OUTSIDE_HOUSEHOLD_2016
     )
@@ -224,7 +224,7 @@ def add_expenditures(ce: h5py.File, fmli_df: DataFrame):
     )
     ce[group_prefix + "books"] = fmli_df.READPQ
     ce[group_prefix + "charity"] = (
-        fmli_df.CASHCOPQ * CE.PROPORTION_CASH_CONTRIB_TO_CHARITY
+        fmli_df.CASHCOPQ * CE.proportion_cash_contrib_to_charity
     )
     ce[group_prefix + "clothes"] = fmli_df.APPARPQ
     ce[group_prefix + "electricity"] = fmli_df.ELCTRCPQ

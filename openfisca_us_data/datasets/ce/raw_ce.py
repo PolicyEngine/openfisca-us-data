@@ -61,23 +61,25 @@ class RawCE:
                     filename = quarter_filenames[quarter - 1]
                     with zipfile.open(f"{dirstring}/{filename}.csv") as f:
                         q_df = pd.read_csv(f)
-                        q_df.insert(0, "nominal_year", year)
-                        q_df.insert(1, "nominal_quarter", quarter)
-                        q_df.insert(
-                            2,
-                            "cu_id",
-                            # Consumer Unit ID is all but the final digit of NEWID.
-                            q_df.NEWID.astype(str).str[:-1].astype(int),
+                        q_df[["nominal_year"]] = year
+                        q_df[["nominal_quarter"]] = quarter
+                        q_df.assign(
+                            cu_id=q_df.NEWID.astype(str).str[:-1].astype(int)
                         )
-                        q_df.insert(
-                            3,
-                            "interview_id",
-                            # Interview ID is the final digit of NEWID.
-                            q_df.NEWID.astype(str).str[-1].astype(int),
+                        q_df.assign(
+                            interview_id=q_df.NEWID.astype(str)
+                            .str[-1]
+                            .astype(int)
                         )
-                        q_df.insert(4, "interview_mo", q_df["QINTRVMO"])
-                        q_df.insert(5, "interview_yr", q_df["QINTRVYR"])
-                        q_df.insert(6, "weight", q_df["FINLWT21"])
+                        q_df[["weight"]] = q_df[["FINLWT21"]]
+                        q_df.rename(
+                            {
+                                "QINTRVMO": "interview_mo",
+                                "QINTRVYR": "interview_yr",
+                            },
+                            axis=1,
+                            inplace=True,
+                        )
                         storage[filename] = q_df
 
         except Exception as e:
