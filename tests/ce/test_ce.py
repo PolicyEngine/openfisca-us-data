@@ -38,9 +38,7 @@ def test_ce_from_2019():
 
     # Test Household Sector CO2 emissions are "in the ballpark" --------------
     est_co2_kg_per_cu = ce_2019["/annual/co2_kg"][()]
-    est_total_tons_co2 = (
-        est_co2_kg_per_cu * HHS_IN_US_2019 / KG_PER_METRIC_TON
-    )
+    est_total_tons_co2 = est_co2_kg_per_cu * HHS_IN_US_2019 / KG_PER_METRIC_TON
     assert round(est_total_tons_co2 / 1e9) > 2
     assert round(est_total_tons_co2 / 1e9) < 6
 
