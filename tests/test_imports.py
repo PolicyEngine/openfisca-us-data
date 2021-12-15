@@ -16,3 +16,11 @@ def test_RawACS_import():
 
 def test_ACS_import():
     from openfisca_us_data import ACS
+
+
+def test_RawCE_import():
+    from openfisca_us_data import RawCE
+
+
+def test_CE_import():
+    from openfisca_us_data import CE
