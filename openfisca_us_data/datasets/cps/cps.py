@@ -121,7 +121,7 @@ def add_personal_income_variables(cps: h5py.File, person: DataFrame):
     cps["e02100"] = person.FRSE_VAL
     cps["e02400"] = person.SS_VAL
     cps["e02300"] = person.UC_VAL
-
+    cps["pencon"] = np.zeros(len(person.index), dtype=np.int32)
     # Pensions/annuities
     other_inc_type = person.OI_OFF
     cps["e01500"] = other_inc_type.isin((2, 13)) * person.OI_VAL
@@ -149,9 +149,4 @@ def add_SPM_variables(cps: h5py.File, spm_unit: DataFrame):
         cps[openfisca_variable] = spm_unit[asec_variable]
 
 
-def add_tax_unit_variables(cps: h5py.File, tax_unit: DataFrame):
-    cps["e00200p"] = tax_unit.ACTC_CRD
-    cps["e00200s"] = tax_unit.AGI
-    cps["e00900s"] = tax_unit.CTC_CRD
-    cps["pencon_p"] = tax_unit.FED_RET
-    cps["pencon_s"] = tax_unit.MARG_TAX
+
