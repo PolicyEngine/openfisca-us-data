@@ -1,4 +1,4 @@
-from openfisca_us_data import CPS, ACS, REPO
+from openfisca_us_data import CPS, REPO
 import pytest
 import yaml
 import pandas as pd
@@ -23,31 +23,19 @@ with open(REPO.parent / "tests" / "cps" / "taxcalc_cps.yml", "r") as f:
 sims = {}
 
 
-@pytest.mark.dependency(name="dataset")
+@pytest.mark.dependency(name="cps")
 @pytest.mark.parametrize("year", CPS_YEARS)
 def test_CPS_dataset_generates(year):
     CPS.generate(year)
 
 
-@pytest.mark.dependency(name="dataset")
-@pytest.mark.parametrize("year", ACS_YEARS)
-def test_ACS_dataset_generates(year):
-    ACS.generate(year)
-
-
-@pytest.mark.dependency(depends=["dataset"])
+@pytest.mark.dependency(depends=["cps"])
 @pytest.mark.parametrize("year", CPS_YEARS)
 def test_cps_openfisca_us_compatible(year):
-    Microsimulation(dataset=CPS, year=year)
+    Microsimulation(dataset=CPS, year=year).calc("tax")
 
 
-@pytest.mark.dependency(depends=["dataset"])
-@pytest.mark.parametrize("year", ACS_YEARS)
-def test_acs_openfisca_us_compatible(year):
-    Microsimulation(dataset=ACS, year=year)
-
-
-@pytest.mark.dependency(depends=["dataset"])
+@pytest.mark.dependency(depends=["cps"])
 @pytest.mark.parametrize("year,variable", product(CPS_YEARS, VARIABLES))
 def test_agg_against_taxcalc(year, variable):
     if year not in sims:

@@ -46,9 +46,19 @@ class RawCPS:
                 with zipfile.open(f"pppub{file_year_code}.csv") as f:
                     storage["person"] = person = pd.read_csv(f).fillna(0)
                 with zipfile.open(f"ffpub{file_year_code}.csv") as f:
-                    storage["family"] = pd.read_csv(f).fillna(0)
+                    person_family_id = person.PH_SEQ * 10 + person.PF_SEQ
+                    family = pd.read_csv(f).fillna(0)
+                    family_id = family.FH_SEQ * 10 + family.FFPOS
+                    family = family[family_id.isin(person_family_id)]
+                    storage["family"] = family
                 with zipfile.open(f"hhpub{file_year_code}.csv") as f:
-                    storage["household"] = pd.read_csv(f).fillna(0)
+                    person_household_id = person.PH_SEQ
+                    household = pd.read_csv(f).fillna(0)
+                    household_id = household.H_SEQ
+                    household = household[
+                        household_id.isin(person_household_id)
+                    ]
+                    storage["household"] = household
                 storage["tax_unit"] = create_tax_unit_table(person)
                 storage["spm_unit"] = create_SPM_unit_table(person)
         except Exception as e:
