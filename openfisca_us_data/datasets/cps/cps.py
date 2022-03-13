@@ -40,7 +40,7 @@ class CPS:
         add_personal_variables(cps, person)
         add_personal_income_variables(cps, person)
         add_SPM_variables(cps, spm_unit)
-
+        add_tax_unit_variables(cps, tax_unit)
         raw_data.close()
         cps.close()
 
@@ -147,3 +147,11 @@ def add_SPM_variables(cps: h5py.File, spm_unit: DataFrame):
 
     for openfisca_variable, asec_variable in SPM_RENAMES.items():
         cps[openfisca_variable] = spm_unit[asec_variable]
+
+
+def add_tax_unit_variables(cps: h5py.File, tax_unit: DataFrame):
+    cps["e00200p"] = tax_unit.ACTC_CRD
+    cps["e00200s"] = tax_unit.AGI
+    cps["e00900s"] = tax_unit.CTC_CRD
+    cps["pencon_p"] = tax_unit.FED_RET
+    cps["pencon_s"] = tax_unit.MARG_TAX
