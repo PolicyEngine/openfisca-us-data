@@ -18,6 +18,7 @@ setup(
         "h5py",
         "microdf_python<1",
         "matplotlib<4",
+        "taxcalc<7",
         "synthimpute",
         "pytest",
         "pytest-dependency",
