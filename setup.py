@@ -11,11 +11,16 @@ setup(
     author_email="nikhil.woodruff@outlook.com",
     packages=find_packages(),
     install_requires=[
-        "pandas",
+        "pandas<2",
         "pathlib",
         "tqdm",
         "tables",
         "h5py",
+        "microdf_python<1",
+        "matplotlib<4",
+        "taxcalc<7",
+        "numpy<1.21",
+        "OpenFisca-Core>=38,<39",
         "synthimpute",
         "pytest",
         "pytest-dependency",
@@ -24,7 +29,7 @@ setup(
     extras_require={
         "dev": [
             "autopep8",
-            "black",
+            "black==20.8b1",
             "setuptools",
             "wheel",
             "openfisca-us",

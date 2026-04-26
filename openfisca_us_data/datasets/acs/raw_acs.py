@@ -12,7 +12,12 @@ class RawACS:
         url = f"https://www2.census.gov/programs-surveys/supplemental-poverty-measure/datasets/spm/spm_{year}_pu.dta"
         try:
             with pd.HDFStore(RawACS.file(year)) as storage:
-                person = pd.read_stata(url).fillna(0)
+                person = pd.read_stata(url)
+                for column in person.select_dtypes(
+                    include=["category"]
+                ).columns:
+                    person[column] = person[column].astype(object)
+                person = person.fillna(0)
                 person.columns = person.columns.str.upper()
                 storage["person"] = person
                 storage["spm_unit"] = create_SPM_unit_table(person)

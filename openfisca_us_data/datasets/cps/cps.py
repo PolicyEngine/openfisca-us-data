@@ -72,9 +72,11 @@ def add_ID_variables(
     cps["person_tax_unit_id"] = person.TAX_ID
     cps["person_spm_unit_id"] = person.SPM_ID
     cps["tax_unit_id"] = tax_unit.TAX_ID
+    cps["marital_unit_id"] = tax_unit.TAX_ID
     cps["spm_unit_id"] = spm_unit.SPM_ID
     cps["person_household_id"] = person.PH_SEQ
     cps["person_family_id"] = person.PH_SEQ * 10 + person.PF_SEQ
+    cps["person_marital_unit_id"] = person.TAX_ID
 
     # Add weights
     cps["person_weight"] = person.A_FNLWGT / 1e2
@@ -89,6 +91,7 @@ def add_ID_variables(
     cps["tax_unit_weight"] = persons_family_weight.groupby(
         cps["person_tax_unit_id"][...]
     ).first()
+    cps["marital_unit_weight"] = cps["tax_unit_weight"][...]
 
     cps["spm_unit_weight"] = spm_unit.SPM_WEIGHT / 1e2
 

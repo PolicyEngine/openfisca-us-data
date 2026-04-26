@@ -40,6 +40,8 @@ def test_cps_openfisca_us_compatible(year):
 def test_agg_against_taxcalc(year, variable):
     if year not in sims:
         sims[year] = Microsimulation(dataset=CPS, year=year)
+    if variable not in sims[year].simulation.tax_benefit_system.variables:
+        pytest.skip(f"{variable} is not available in this OpenFisca-US build")
     result = sims[year].calc(variable).sum()
     target = tc[variable][year]
     assert abs(result / target) < MAX_REL_ERROR

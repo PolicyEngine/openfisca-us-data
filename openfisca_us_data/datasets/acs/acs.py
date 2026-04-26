@@ -57,10 +57,12 @@ def add_ID_variables(
     acs["spm_unit_id"] = spm_unit.SPM_ID
     # ACS doesn't have tax units.
     acs["tax_unit_id"] = spm_unit.SPM_ID
+    acs["marital_unit_id"] = spm_unit.SPM_ID
     # Until we add a family table, we'll use the person table.
     acs["family_id"] = spm_unit.SPM_ID
     acs["person_household_id"] = person.SERIALNO
     acs["person_tax_unit_id"] = person.SPM_ID
+    acs["person_marital_unit_id"] = person.SPM_ID
     acs["person_family_id"] = person.SPM_ID
     acs["household_id"] = household.SERIALNO
 
