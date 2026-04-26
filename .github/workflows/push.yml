@@ -13,28 +13,28 @@ jobs:
           args: ". -l 79 --check"
   Test:
     if: github.repository == 'PolicyEngine/openfisca-us-data'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.10"
+          python-version: "3.7"
       - name: Install package
         run: make install
       - name: Run tests
         run: make test
   Publish:
     if: github.repository == 'PolicyEngine/openfisca-us-data'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.10"
+          python-version: "3.7"
       - name: Install package
         run: make install
       - name: Build package

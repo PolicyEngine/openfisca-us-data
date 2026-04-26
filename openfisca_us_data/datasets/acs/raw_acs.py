@@ -13,6 +13,10 @@ class RawACS:
         try:
             with pd.HDFStore(RawACS.file(year)) as storage:
                 person = pd.read_stata(url).fillna(0)
+                for column in person.select_dtypes(
+                    include=["category"]
+                ).columns:
+                    person[column] = person[column].astype(str)
                 person.columns = person.columns.str.upper()
                 storage["person"] = person
                 storage["spm_unit"] = create_SPM_unit_table(person)
