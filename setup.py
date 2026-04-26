@@ -29,7 +29,7 @@ setup(
     extras_require={
         "dev": [
             "autopep8",
-            "black<22",
+            "black==22.3.0",
             "setuptools",
             "wheel",
             "openfisca-us",
