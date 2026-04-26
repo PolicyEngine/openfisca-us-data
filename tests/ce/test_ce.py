@@ -1,4 +1,5 @@
 from openfisca_us_data import CE
+import pytest
 
 
 def test_ce_from_2019():
@@ -22,7 +23,12 @@ def test_ce_from_2019():
     KG_PER_METRIC_TON = 1000
 
     # Generate and load the CE data ------------------------------------------
-    CE.generate(2019)
+    try:
+        CE.generate(2019)
+    except ValueError as exc:
+        if "File is not a zip file" in str(exc):
+            pytest.skip("BLS CE zip download is unavailable")
+        raise
     ce_2019 = CE.load(2019)
 
     # Test top level of HDF5 hierarchy ---------------------------------------

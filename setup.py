@@ -11,7 +11,7 @@ setup(
     author_email="nikhil.woodruff@outlook.com",
     packages=find_packages(),
     install_requires=[
-        "pandas",
+        "pandas<2",
         "pathlib",
         "tqdm",
         "tables",
@@ -19,6 +19,7 @@ setup(
         "microdf_python<1",
         "matplotlib<4",
         "taxcalc<7",
+        "OpenFisca-Core<44",
         "synthimpute",
         "pytest",
         "pytest-dependency",
