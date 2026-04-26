@@ -16,6 +16,7 @@ setup(
         "tqdm",
         "tables",
         "h5py",
+        "microdf_python<1",
         "synthimpute",
         "pytest",
         "pytest-dependency",
