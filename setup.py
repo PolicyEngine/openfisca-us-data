@@ -17,6 +17,7 @@ setup(
         "tables",
         "h5py",
         "microdf_python<1",
+        "matplotlib<4",
         "synthimpute",
         "pytest",
         "pytest-dependency",
